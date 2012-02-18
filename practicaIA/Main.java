@@ -1,5 +1,3 @@
-package practicaIA;
-
 /**************************************************************/
 /*   PRACTICA IA: Resolucion de problemas de busqueda.        */
 /*   Curso: 2011-2012                                         */
@@ -22,12 +20,18 @@ package practicaIA;
  *     $ java -jar Practica_IA.jar
  */
 
+package practicaIA;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 
-
+/**
+ * Clase principal. Esta es la clase que hay que ejecutar para lanzar el programa.
+ * @author Adrian Carpente Recouso
+ * @author Juan Rodrigo Cantorna Berdullas
+ */
 public class Main 
 {
     /**
@@ -93,6 +97,10 @@ public class Main
 
     public static void main(String[] args) 
     {
-
+        Mapa m = new Mapa();
+        
+        m.mostrar();
+        
+  
     }
 }

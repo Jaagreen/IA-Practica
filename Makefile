@@ -11,4 +11,4 @@ run:
 
 
 clean:
-	rm practicaIA/$(FUENTE).class
+	rm practicaIA/*.class
