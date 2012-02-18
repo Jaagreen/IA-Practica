@@ -20,10 +20,11 @@ public class Funciones
      * @param min Cota inferiror del rango de numeros pseudoaleatorios.
      * @return El numero pseudoaleatorio generado.
      */
-    public static int obtenerNumeroAleatorio(int max, int min)
+    public static int obtenerNumeroAleatorio(int min, int max)
     {
-        return (int) (Math.random() * (max - min)) + min;
+        return (int) (Math.random() * ((max+1) - min)) + min;
     }    
+    
     
     /**
      * Metodo para comprobar si una cadena esta vacia o si todos los caracteres que 

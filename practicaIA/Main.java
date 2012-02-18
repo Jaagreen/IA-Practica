@@ -97,21 +97,23 @@ public class Main
 
     public static void main(String[] args) 
     {
-        Viajero v = new Viajero();
-        Mapa m = new Mapa(v);
-        
+        Mapa m = new Mapa();        
+        Viajero v = new Viajero(m, 90, false);
         m.mostrar();
         
         
-        Mapa m2 = new Mapa(8, 10, 3, v);
-        
+        Mapa m2 = new Mapa(8, 10, 3);
+        v = new Viajero(m2, 90, true);
         m2.mostrar();
+        
+        System.out.println("Orientacion: " + m2.getViajero().getOrientacion());
+        
         
         Mapa m3 = null;
         
         try
         {
-            m3 = new Mapa("Tablero.txt", v);
+            m3 = new Mapa("Tablero.txt");
         }
         catch(Exception e)
         {
@@ -119,6 +121,7 @@ public class Main
             System.exit(-1);
         }   
         
+        v = new Viajero(m3, 90, new int[] {2,3}, new int[] {7, 7}, Orientacion.NORTE);
         
         m3.mostrar();
     }

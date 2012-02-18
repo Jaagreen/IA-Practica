@@ -33,16 +33,13 @@ public class Mapa
     private Viajero viajero;
     
     
-    public Mapa(Viajero viajero)
-    {
-        //Anadimos el viajero al mapa.
-        this.viajero = viajero;
-        
+    public Mapa()
+    {       
         cargarMapaPorDefecto();
     }
     
     
-    public Mapa(String rutaFichero, Viajero viajero) throws IOException, NumberFormatException
+    public Mapa(String rutaFichero) throws IOException, NumberFormatException
     {
         FileReader ficheroMapa = new FileReader(rutaFichero); 
         BufferedReader buff = new BufferedReader(ficheroMapa);        
@@ -100,9 +97,6 @@ public class Mapa
         //Cerramos los flujos de entrada
         buff.close();
         ficheroMapa.close();
-        
-        //Anadimos el viajero al mapa.
-        this.viajero = viajero;
     }
     
     
@@ -114,7 +108,7 @@ public class Mapa
      * @param numeroObstaculos Numero de ostaculos del mapa aleatorio.
      * @param viajero Persona que viajara por el mapa aleatorio.
      */
-    public Mapa(int numeroFilas, int numeroColumnas, int numeroObstaculos, Viajero viajero)
+    public Mapa(int numeroFilas, int numeroColumnas, int numeroObstaculos) throws IllegalArgumentException
     {
         if(numeroFilas <= 0)
             throw new IllegalArgumentException("El numero de filas tiene que ser mayor que 0");
@@ -154,17 +148,47 @@ public class Mapa
             mapa[fila][columna] = Funciones.obtenerNumeroAleatorio(2, 5);
             i++;
         }
-        
-        //Anadimos el viajero al mapa.
-        this.viajero = viajero;
     }   
     
     
     public final void cargarMapaPorDefecto()
     {
         mapa = mapaPorDefecto;
-        viajero.cargarPosicionesPorDefecto();
+        
+        if(viajero != null)
+            viajero.cargarPosicionesPorDefecto();
     }
+    
+    
+    public void asignarViajero(Viajero viajero)
+    {
+        //Anadimos el viajero al mapa.
+        this.viajero = viajero;        
+    }
+    
+    
+    public int getNumeroFilas()
+    {
+        return mapa.length;
+    }
+    
+    
+    public int getNumeroColumnas()
+    {
+        return mapa[0].length;
+    }   
+    
+    
+    public Viajero getViajero()
+    {
+        return viajero;
+    }
+    
+    
+    public int getDificultadPosicion(int fila, int columna)
+    {
+        return mapa[fila][columna];
+    }    
     
     
     /**
@@ -186,12 +210,12 @@ public class Mapa
             
             for(int col = 0; col < mapa[fila].length; col++)
             {
-                if(viajero.getPosInicio()[0] == fila && viajero.getPosInicio()[1] == col)
+                if(viajero != null && viajero.getPosInicio()[0] == fila && viajero.getPosInicio()[1] == col)
                 {
                     //Escribimos una A (de Abdel) en rojo y en negrita.
                     System.out.print("\033[1;31m A \033[0m");                    
                 }
-                else if(viajero.getPosMeta()[0] == fila && viajero.getPosMeta()[1] == col)
+                else if(viajero != null && viajero.getPosMeta()[0] == fila && viajero.getPosMeta()[1] == col)
                 {
                     //Escribimos una G (de Gertrudis) en rojo y en negrita.
                     System.out.print("\033[1;31m G \033[0m");
