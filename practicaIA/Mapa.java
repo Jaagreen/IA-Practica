@@ -23,26 +23,42 @@ public class Mapa
                                                     {3,5,1,2,4,4,1,4},
                                                     {1,3,1,1,4,1,1,1}
                                                 };
-    
-    private static final int inicioPorDefecto[] = {0,4};
-    private static final int metaPorDefecto[] = {5,5};
-    
     private int mapa[][];
-    private int inicio[];
-    private int meta[];
+    private Viajero viajero;
     
-    public Mapa()
+    
+    public Mapa(Viajero viajero)
     {
+        this.viajero = viajero;
         cargarMapaPorDefecto();
-
     }
+    
+    
+    public Mapa(String rutaFichero, Viajero viajero)
+    {
+        //TODO cargar mapa de fichero.
+        this.viajero = viajero;
+    }
+    
+    
+    public Mapa(int numeroFilas, int numeroColumnas, int numeroOstaculos, Viajero viajero)
+    {
+        if(numeroFilas <= 0)
+            throw new IllegalArgumentException("El numero de filas tiene que ser mayor que 0");
+        
+        if(numeroColumnas <= 0)
+            throw new IllegalArgumentException("El numero de columnas tiene que ser mayor que 0");
+        
+        this.viajero = viajero;
+    }   
+    
     
     public final void cargarMapaPorDefecto()
     {
         mapa = mapaPorDefecto;
-        inicio = inicioPorDefecto;
-        meta = metaPorDefecto;
+        viajero.cargarPosicionesPorDefecto();
     }
+    
     
     /**
      * Metodo que muestra por pantalla el estado actual del tablero.
@@ -63,12 +79,16 @@ public class Mapa
             
             for(int col = 0; col < mapa[fila].length; col++)
             {
-                if(inicio[0] == fila && inicio[1] == col)
+                if(viajero.getPosInicio()[0] == fila && viajero.getPosInicio()[1] == col)
+                {
                     //Escribimos una A (de Abdel) en rojo y en negrita.
                     System.out.print("\033[1;31m A \033[0m");                    
-                else if(meta[0] == fila && meta[1] == col)
+                }
+                else if(viajero.getPosMeta()[0] == fila && viajero.getPosMeta()[1] == col)
+                {
                     //Escribimos una G (de Gertrudis) en rojo y en negrita.
                     System.out.print("\033[1;31m G \033[0m");
+                }
                 else
                     System.out.print(" " + mapa[fila][col] + " ");
             

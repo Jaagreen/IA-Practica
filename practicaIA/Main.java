@@ -97,7 +97,8 @@ public class Main
 
     public static void main(String[] args) 
     {
-        Mapa m = new Mapa();
+        Viajero v = new Viajero();
+        Mapa m = new Mapa(v);
         
         m.mostrar();
         
