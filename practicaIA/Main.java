@@ -106,6 +106,20 @@ public class Main
         Mapa m2 = new Mapa(8, 10, 3, v);
         
         m2.mostrar();
-  
+        
+        Mapa m3 = null;
+        
+        try
+        {
+            m3 = new Mapa("Tablero.txt", v);
+        }
+        catch(Exception e)
+        {
+            System.err.println("Error leyendo el tablero del fichero: " + e.getMessage());
+            System.exit(-1);
+        }   
+        
+        
+        m3.mostrar();
     }
 }

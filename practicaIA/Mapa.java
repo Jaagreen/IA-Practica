@@ -7,6 +7,12 @@
 
 package practicaIA;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.StringTokenizer;
+
 /**
  * Clase principal. Esta es la clase que hay que ejecutar para lanzar el programa.
  * @author Adrian Carpente Recouso
@@ -29,16 +35,77 @@ public class Mapa
     
     public Mapa(Viajero viajero)
     {
+        //Anadimos el viajero al mapa.
         this.viajero = viajero;
+        
         cargarMapaPorDefecto();
     }
     
     
-    public Mapa(String rutaFichero, Viajero viajero)
+    public Mapa(String rutaFichero, Viajero viajero) throws IOException, NumberFormatException
     {
-        //TODO cargar mapa de fichero.
+        FileReader ficheroMapa = new FileReader(rutaFichero); 
+        BufferedReader buff = new BufferedReader(ficheroMapa);        
+        LinkedList<String> filas = new LinkedList<String>();
+        String linea;
+        
+        //Leemos cada fila de las filas almacenadas en el fichero.
+        while((linea = buff.readLine()) != null)
+        {
+            //Si la linea esta vacia nos la saltamos.
+            if(linea.isEmpty() || Funciones.esCadenaEnBlanco(linea))
+                continue;
+
+            //Anadimos la fila a la lista de filas.
+            filas.add(linea);
+        }
+
+        if(filas.isEmpty())
+            throw new NumberFormatException("El fichero " + rutaFichero + " no contiene un mapa");
+        
+        StringTokenizer st = new StringTokenizer(filas.getFirst());
+        
+        //Creamos el mapa con las dimensiones indicadas en el fichero.
+        mapa = new int[filas.size()][st.countTokens()];        
+
+        
+        //Inicializamos el mapa con los valores leidos.
+        //Recorremos cada fila del mapa.
+        for(int i = 0; i < filas.size(); i++)
+        {            
+            st = new StringTokenizer(filas.get(i));
+            
+            //Comprobamos que la fila tenta la longitud correcta.
+            if(st.countTokens() != mapa[i].length)
+                throw new NumberFormatException("El mapa indicado en el fichero " + rutaFichero + 
+                                                " no es correcto: las filas tienen distinta longitud");
+            
+            //Obtenemos el valor de cada columna de la fila actual e inicializamos el
+            //mapa con dicho valor.
+            for(int j = 0; j < mapa[i].length; j++)
+            {                
+                mapa[i][j] = Integer.parseInt(st.nextToken());
+                
+                //Comprobamos que el valor leido es correcto.
+                if(mapa[i][j] < 1)
+                    throw new NumberFormatException("El mapa indicado en el fichero " + rutaFichero + 
+                                                    " no es correcto: existen posiciones con valores menores que 1");
+                
+                if(mapa[i][j] > 5)
+                    throw new NumberFormatException("El mapa indicado en el fichero " + rutaFichero + 
+                                                    " no es correcto: existen posiciones con valores mayores que 5");
+            }
+        }
+
+        //Cerramos los flujos de entrada
+        buff.close();
+        ficheroMapa.close();
+        
+        //Anadimos el viajero al mapa.
         this.viajero = viajero;
     }
+    
+    
     
     /**
      * Constructor de la clase mapa la cual crea un mapa aleatorio en funcion de los parametros recibidos.
