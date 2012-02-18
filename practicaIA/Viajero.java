@@ -109,4 +109,144 @@ public class Viajero
     {
         return gradosGiros;
     }
+    
+    
+    /**
+     * Metodo que gira la orientacion del viajero en sentido horaro los grados
+     * indicados por el atributo gradoGiros.
+     * @return La nueva orientacion del viajero.
+     */
+    public Orientacion girarSentidoHorario()
+    {
+        if(gradosGiros == 90) //Si los giros son de 90 grados.
+        {
+            switch(orientacion)
+            {
+                case NORTE: 
+                    orientacion = Orientacion.ESTE;
+                    return orientacion;
+                
+                case ESTE: 
+                    orientacion = Orientacion.SUR;
+                    return orientacion;
+                    
+                case SUR: 
+                    orientacion = Orientacion.OESTE;
+                    return orientacion;
+
+                case OESTE: 
+                    orientacion = Orientacion.NORTE;
+                    return orientacion;                
+            } 
+        }
+        else //Si se trata de giros de 45 grados.
+        {
+            switch(orientacion)
+            {
+                case NORTE: 
+                    orientacion = Orientacion.NORESTE;
+                    return orientacion;
+                    
+                case NORESTE: 
+                    orientacion = Orientacion.ESTE;
+                    return orientacion;
+                    
+                case ESTE: 
+                    orientacion = Orientacion.SURESTE;
+                    return orientacion;
+                    
+                case SURESTE: 
+                    orientacion = Orientacion.SUR;
+                    return orientacion;
+                    
+                case SUR: 
+                    orientacion = Orientacion.SUROESTE;
+                    return orientacion;
+                    
+                case SUROESTE: 
+                    orientacion = Orientacion.OESTE;
+                    return orientacion;
+
+                case OESTE: 
+                    orientacion = Orientacion.NOROESTE;
+                    return orientacion;
+                
+                case NOROESTE: 
+                    orientacion = Orientacion.NORTE;
+                    return orientacion;
+            }
+        }
+        
+        return orientacion;
+    }
+    
+    
+    /**
+     * Metodo que gira la orientacion del viajero en sentido antihoraro los grados
+     * indicados por el atributo gradoGiros.
+     * @return La nueva orientacion del viajero.
+     */
+    public Orientacion girarSentidoAntiHorario()
+    {
+        if(gradosGiros == 90) //Si los giros son de 90 grados.
+        {
+            switch(orientacion)
+            {
+                case NORTE: 
+                    orientacion = Orientacion.OESTE;
+                    return orientacion;
+                
+                case OESTE: 
+                    orientacion = Orientacion.SUR;
+                    return orientacion;
+                    
+                case SUR: 
+                    orientacion = Orientacion.ESTE;
+                    return orientacion;
+
+                case ESTE: 
+                    orientacion = Orientacion.NORTE;
+                    return orientacion;                
+            } 
+        }
+        else //Si se trata de giros de 45 grados.
+        {
+            switch(orientacion)
+            {
+                case NORTE: 
+                    orientacion = Orientacion.NOROESTE;
+                    return orientacion;
+                    
+                case NOROESTE: 
+                    orientacion = Orientacion.OESTE;
+                    return orientacion;
+                    
+                case OESTE: 
+                    orientacion = Orientacion.SUROESTE;
+                    return orientacion;
+                    
+                case SUROESTE: 
+                    orientacion = Orientacion.SUR;
+                    return orientacion;
+                    
+                case SUR: 
+                    orientacion = Orientacion.SURESTE;
+                    return orientacion;
+                    
+                case SURESTE: 
+                    orientacion = Orientacion.ESTE;
+                    return orientacion;
+
+                case ESTE: 
+                    orientacion = Orientacion.NORESTE;
+                    return orientacion;
+                
+                case NORESTE: 
+                    orientacion = Orientacion.NORTE;
+                    return orientacion;
+            }
+        }
+        
+        return orientacion;
+    }    
 }

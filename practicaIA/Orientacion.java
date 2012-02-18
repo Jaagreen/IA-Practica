@@ -21,7 +21,7 @@ public enum Orientacion
     NORESTE("noreste", "NE", 4),
     NOROESTE("noroeste", "NO", 5),
     SURESTE("sureste", "SE", 6),
-    SUROROESTE("suroeste", "SO", 7);
+    SUROESTE("suroeste", "SO", 7);
     
     private String valor;
     private String abreviatura;
