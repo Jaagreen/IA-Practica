@@ -102,6 +102,10 @@ public class Main
         
         m.mostrar();
         
+        
+        Mapa m2 = new Mapa(8, 10, 3, v);
+        
+        m2.mostrar();
   
     }
 }

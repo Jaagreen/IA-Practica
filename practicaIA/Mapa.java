@@ -40,8 +40,14 @@ public class Mapa
         this.viajero = viajero;
     }
     
-    
-    public Mapa(int numeroFilas, int numeroColumnas, int numeroOstaculos, Viajero viajero)
+    /**
+     * Constructor de la clase mapa la cual crea un mapa aleatorio en funcion de los parametros recibidos.
+     * @param numeroFilas Numero de filas del mapa aleatorio.
+     * @param numeroColumnas Numero de columnas del mapa aleatorio.
+     * @param numeroObstaculos Numero de ostaculos del mapa aleatorio.
+     * @param viajero Persona que viajara por el mapa aleatorio.
+     */
+    public Mapa(int numeroFilas, int numeroColumnas, int numeroObstaculos, Viajero viajero)
     {
         if(numeroFilas <= 0)
             throw new IllegalArgumentException("El numero de filas tiene que ser mayor que 0");
@@ -49,6 +55,40 @@ public class Mapa
         if(numeroColumnas <= 0)
             throw new IllegalArgumentException("El numero de columnas tiene que ser mayor que 0");
         
+        if(numeroObstaculos <= 0)
+            throw new IllegalArgumentException("El numero de ostaculos tiene que ser mayor o igual que 0");
+        
+        if(numeroObstaculos > numeroFilas*numeroColumnas)
+            throw new IllegalArgumentException("El numero de ostaculos es mayor que el numero de posiciones del mapa");
+        
+        mapa = new int[numeroFilas][numeroColumnas];
+        
+        
+        //Inicializamos el mapa al coste minimo
+        for(int i = 0; i < numeroFilas; i++)
+            for(int j = 0; j < numeroColumnas; j++)
+                mapa[i][j] = 1;
+        
+        
+        //Anadimos los obstaculos al mapa.
+        int i = 0;
+        while(i < numeroObstaculos)
+        {
+            //Seleccionamos aleatoriamente una fila y una columna para situar el obstaculo.
+            int fila = Funciones.obtenerNumeroAleatorio(0, numeroFilas-1);
+            int columna = Funciones.obtenerNumeroAleatorio(0, numeroColumnas-1);
+            
+            //Si en la posicion seleccioada ya se habia asignado un ostaculo, entonces
+            //generamos otra posicon aleatoria en la que situar el ostaculo.
+            if(mapa[fila][columna] != 1)
+                continue;
+            
+            //Situamos el obstaculo.
+            mapa[fila][columna] = Funciones.obtenerNumeroAleatorio(2, 5);
+            i++;
+        }
+        
+        //Anadimos el viajero al mapa.
         this.viajero = viajero;
     }   
     
