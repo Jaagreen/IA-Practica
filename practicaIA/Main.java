@@ -97,27 +97,16 @@ public class Main
 
     public static void main(String[] args) 
     {
+        Viajero v;
         Mapa m = new Mapa();        
-        Viajero v = new Viajero(m, 90, false);
+        v = new Viajero(m, 90, false);
         m.mostrar();
         
         
         Mapa m2 = new Mapa(8, 10, 3);
         v = new Viajero(m2, 90, true);
         m2.mostrar();
-        
-        System.out.println("Orientacion: " + m2.getViajero().getOrientacion());
-        v.girarSentidoHorario();
-        System.out.println("Orientacion: " + m2.getViajero().getOrientacion());
-        v.girarSentidoHorario();
-        System.out.println("Orientacion: " + m2.getViajero().getOrientacion());
-        v.girarSentidoHorario();
-        System.out.println("Orientacion: " + m2.getViajero().getOrientacion());
-        v.girarSentidoHorario();
-        System.out.println("Orientacion: " + m2.getViajero().getOrientacion());
-        v.girarSentidoAntiHorario();
-        System.out.println("Orientacion: " + m2.getViajero().getOrientacion());
-        
+         
         
         Mapa m3 = null;
         
@@ -131,33 +120,49 @@ public class Main
             System.exit(-1);
         }   
         
-        v = new Viajero(m3, 45, new int[] {2,3}, new int[] {7, 7}, Orientacion.NORTE);
+        v = new Viajero(m3, 45, new int[] {3,3}, new int[] {7, 7}, Orientacion.NORTE);
         
         m3.mostrar();
+
+        esperar(1000);
+        v.avanzar();
+        limpiarPantalla();
+        m3.mostrar();
         
-        System.out.println("Orientacion: " + m3.getViajero().getOrientacion());
-        v.girarSentidoHorario();
-        System.out.println("Orientacion: " + m3.getViajero().getOrientacion());
-        v.girarSentidoHorario();
-        System.out.println("Orientacion: " + m3.getViajero().getOrientacion());
-        v.girarSentidoHorario();
-        System.out.println("Orientacion: " + m3.getViajero().getOrientacion());
-        v.girarSentidoHorario();
-        System.out.println("Orientacion: " + m3.getViajero().getOrientacion());
-        v.girarSentidoHorario();
-        System.out.println("Orientacion: " + m3.getViajero().getOrientacion());
-        v.girarSentidoHorario();
-        System.out.println("Orientacion: " + m3.getViajero().getOrientacion());
-        v.girarSentidoHorario();
-        System.out.println("Orientacion: " + m3.getViajero().getOrientacion());
-        v.girarSentidoHorario();
-        System.out.println("Orientacion: " + m3.getViajero().getOrientacion());
-        v.girarSentidoAntiHorario();
-        System.out.println("Orientacion: " + m3.getViajero().getOrientacion());
-        v.girarSentidoAntiHorario();
-        System.out.println("Orientacion: " + m3.getViajero().getOrientacion());
-        v.girarSentidoAntiHorario();
-        System.out.println("Orientacion: " + m3.getViajero().getOrientacion());
+        esperar(1000);
+        v.avanzar();
+        limpiarPantalla();
+        m3.mostrar();
         
+        v.girarSentidoHorario();
+        
+        esperar(1000);
+        v.avanzar();
+        limpiarPantalla();
+        m3.mostrar();
+        
+        v.girarSentidoHorario();
+        
+        esperar(1000);
+        v.avanzar();
+        limpiarPantalla();
+        m3.mostrar();
+        
+        esperar(1000);
+        v.avanzar();
+        limpiarPantalla();
+        m3.mostrar();
+        
+        v.girarSentidoHorario();
+        
+        esperar(1000);
+        v.avanzar();
+        limpiarPantalla();
+        m3.mostrar();
+        
+        esperar(1000);
+        v.avanzar();
+        limpiarPantalla();
+        m3.mostrar();
     }
 }

@@ -210,7 +210,7 @@ public class Mapa
             
             for(int col = 0; col < mapa[fila].length; col++)
             {
-                if(viajero != null && viajero.getPosInicio()[0] == fila && viajero.getPosInicio()[1] == col)
+                if(viajero != null && viajero.getPosicion()[0] == fila && viajero.getPosicion()[1] == col)
                 {
                     //Escribimos una A (de Abdel) en rojo y en negrita.
                     System.out.print("\033[1;31m A \033[0m");                    

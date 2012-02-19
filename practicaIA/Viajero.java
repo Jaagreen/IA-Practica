@@ -20,8 +20,10 @@ public class Viajero
     
     private int posInicio[];
     private int posMeta[];
+    private int posicion[];
     private Orientacion orientacion;
     private int gradosGiros;
+    private Mapa mapa;
     
     public Viajero(Mapa mapa, int gradosGiros, boolean aleatorio)
     {
@@ -29,13 +31,16 @@ public class Viajero
             throw new IllegalArgumentException("Los giros tienen que ser de 90 o de 45 grados");
         
         this.gradosGiros = gradosGiros;
-        
+        this.mapa = mapa;
+                
         //Comprobamos si se trata de una inicializacion aleatoria o por defecto.
         if(aleatorio)
         {
             //Generamos una posicion de inicio aleatoria.
             posInicio = new int[] {Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroFilas()-1),
                                    Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroColumnas()-1)};
+            
+            posicion = posInicio;
             
             //Generamos una posicion de meta aleatoria.
             do
@@ -65,15 +70,16 @@ public class Viajero
     
     public Viajero(Mapa mapa, int gradosGiros, int posInicio[], int posMeta[], Orientacion orientacion)
     {
-        this.posInicio = posInicio;
-        this.posMeta = posMeta;
-        this.orientacion = orientacion;
-        
         if(gradosGiros != 90 && gradosGiros != 45)
             throw new IllegalArgumentException("Los giros tienen que ser de 90 o de 45 grados");
 
-        this.gradosGiros = gradosGiros;
-            
+        this.gradosGiros = gradosGiros;                
+        this.posInicio = posInicio;
+        this.posicion = posInicio;
+        this.posMeta = posMeta;
+        this.orientacion = orientacion;
+        this.mapa = mapa;
+
         //Asignamos este viajero al mapa.
         mapa.asignarViajero(this);
     }
@@ -82,6 +88,7 @@ public class Viajero
     public final void cargarPosicionesPorDefecto()
     {
         posInicio = inicioPorDefecto;
+        posicion = posInicio;
         posMeta = metaPorDefecto;
         orientacion = orientacionPorDefecto;
     }
@@ -98,6 +105,10 @@ public class Viajero
         return posMeta;
     }
     
+    public int[] getPosicion()
+    {
+        return posicion;
+    }
     
     public Orientacion getOrientacion()
     {
@@ -249,4 +260,93 @@ public class Viajero
         
         return orientacion;
     }    
+    
+    /**
+     * Metodo que avanza una casilla la posicion actual del viajero en la orientacion
+     * indicada por el atributo orientacion.
+     * @return La nueva posicion del viajero.
+     */
+    public int[] avanzar()
+    {
+        switch(orientacion)
+        {
+            case NORTE: 
+                if(posicion[0] == 0)
+                    throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el norte ya que "
+                                                        + "el viajero esta en el extremo norte del mapa");
+                posicion[0] = posicion[0] - 1;
+                return posicion;
+                
+            case NORESTE: 
+                if(posicion[0] == 0)
+                    throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el norte ya que "
+                                                        + "el viajero esta en el extremo norte del mapa");
+                
+                if(posicion[1] == (mapa.getNumeroColumnas()-1))
+                    throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el este ya que "
+                                                        + "el viajero esta en el extremo este del mapa");
+                posicion[0] = posicion[0] - 1;
+                posicion[1] = posicion[1] + 1;
+                return posicion;
+
+            case ESTE:                                 
+                if(posicion[1] == (mapa.getNumeroColumnas()-1))
+                    throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el este ya que "
+                                                        + "el viajero esta en el extremo este del mapa");                
+                posicion[1] = posicion[1] + 1;
+                return posicion;
+
+            case SURESTE: 
+                if(posicion[0] == (mapa.getNumeroFilas()-1))
+                    throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el sur ya que "
+                                                        + "el viajero esta en el extremo sur del mapa");
+                
+                if(posicion[1] == (mapa.getNumeroColumnas()-1))
+                    throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el este ya que "
+                                                        + "el viajero esta en el extremo este del mapa");
+                posicion[0] = posicion[0] + 1;
+                posicion[1] = posicion[1] + 1;
+                return posicion;
+
+            case SUR: 
+                if(posicion[0] == (mapa.getNumeroFilas()-1))
+                    throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el sur ya que "
+                                                        + "el viajero esta en el extremo sur del mapa");
+                posicion[0] = posicion[0] + 1;                
+                return posicion;
+
+            case SUROESTE: 
+                if(posicion[0] == (mapa.getNumeroFilas()-1))
+                    throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el sur ya que "
+                                                        + "el viajero esta en el extremo sur del mapa");
+                
+                if(posicion[1] == 0)
+                    throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el oeste ya que "
+                                                        + "el viajero esta en el extremo oeste del mapa");
+                posicion[0] = posicion[0] + 1;
+                posicion[1] = posicion[1] - 1;
+                return posicion;
+
+            case OESTE:                 
+                if(posicion[1] == 0)
+                    throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el oeste ya que "
+                                                        + "el viajero esta en el extremo oeste del mapa");
+                posicion[1] = posicion[1] - 1;
+                return posicion;
+
+            case NOROESTE: 
+                if(posicion[0] == 0)
+                    throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el norte ya que "
+                                                        + "el viajero esta en el extremo norte del mapa");
+                
+                if(posicion[1] == 0)
+                    throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el oeste ya que "
+                                                        + "el viajero esta en el extremo oeste del mapa");
+                posicion[0] = posicion[0] - 1;
+                posicion[1] = posicion[1] - 1;
+                return posicion;
+        }   
+        
+        return posicion;
+    }
 }
