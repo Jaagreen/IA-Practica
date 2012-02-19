@@ -105,10 +105,30 @@ public class Viajero
         return posMeta;
     }
     
+    
     public int[] getPosicion()
     {
         return posicion;
     }
+    
+    
+    public void setPosicion(int[] posicion)
+    {
+        if(posicion[0] < 0)
+            throw new IllegalArgumentException("El numero de fila indicado tiene que ser mayor o igual a 0");
+        
+        if(posicion[0] >= mapa.getNumeroFilas())
+            throw new IllegalArgumentException("El numero de fila indicado es mayor que las filas del mapa");
+        
+        if(posicion[1] < 0)
+            throw new IllegalArgumentException("El numero de columna indicado tiene que ser mayor o igual a 0");
+        
+        if(posicion[1] >= mapa.getNumeroColumnas())
+            throw new IllegalArgumentException("El numero de columna indicado es mayor que las columnas del mapa");
+        
+        this.posicion = posicion;
+    }
+    
     
     public Orientacion getOrientacion()
     {

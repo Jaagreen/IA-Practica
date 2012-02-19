@@ -124,45 +124,5 @@ public class Main
         
         m3.mostrar();
 
-        esperar(1000);
-        v.avanzar();
-        limpiarPantalla();
-        m3.mostrar();
-        
-        esperar(1000);
-        v.avanzar();
-        limpiarPantalla();
-        m3.mostrar();
-        
-        v.girarSentidoHorario();
-        
-        esperar(1000);
-        v.avanzar();
-        limpiarPantalla();
-        m3.mostrar();
-        
-        v.girarSentidoHorario();
-        
-        esperar(1000);
-        v.avanzar();
-        limpiarPantalla();
-        m3.mostrar();
-        
-        esperar(1000);
-        v.avanzar();
-        limpiarPantalla();
-        m3.mostrar();
-        
-        v.girarSentidoHorario();
-        
-        esperar(1000);
-        v.avanzar();
-        limpiarPantalla();
-        m3.mostrar();
-        
-        esperar(1000);
-        v.avanzar();
-        limpiarPantalla();
-        m3.mostrar();
     }
 }
