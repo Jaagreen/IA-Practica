@@ -38,6 +38,7 @@ public class Main
     private static Viajero viajero = null;
     private static int gradosGiros = 0;
     private static Orientacion orientacion = null;
+    private static EstrategiaBusqueda estrategiaBusqueda = null;
     
     /**
      * Metodo para borrar todo el contenido de la pantalla y situar el cursor en
@@ -124,21 +125,18 @@ public class Main
 
     private static void menu()
     {
-        introduccion();
-        
         int opcion = -1;
         
         while(opcion != 0)
         {                        
-            if(mapa != null)
-                mapa.mostrar();
+            mostrarMapaYdatos();
             
             System.out.print("\nSeleccione una opcion:\n"
                             + "   1 - Cargar mapa.\n"
                             + "   2 - Tipos de giros.\n"
                             + "   3 - Orientacion.\n"        
                             + "   4 - Posiciones.\n"
-                            + "   5 - Tipo de busqueda.\n"
+                            + "   5 - Metodo de busqueda.\n"
                             + "   6 - Iniciar busqueda.\n"
                             + "   0 - Salir.\n\n"
 
@@ -182,16 +180,13 @@ public class Main
                 case 4: menuAsignarPosicionesViaje();
                         break;
                     
-                case 5: menuCargarMapa();
+                case 5: menuAsignarEstrategiaBusqueda();
                         break;
                     
                 case 6: menuCargarMapa();
                         break;
             }
-            
-            limpiarPantalla();
-        }
-                
+        }                
     }
     
     
@@ -199,12 +194,9 @@ public class Main
     {        
         int opcion = -1;
         
-        while(opcion != 0)
-        {                        
-            limpiarPantalla();
-        
-            if(mapa != null)
-                    mapa.mostrar();
+        while(opcion < 0 || opcion > 3)
+        {                                
+            mostrarMapaYdatos();
             
             System.out.print("\nSeleccione una opcion:\n"
                             + "   1 - Cargar mapa por defecto.\n"
@@ -241,14 +233,22 @@ public class Main
             switch(opcion)
             {
                 case 1: mapa = new Mapa();
-                        return;
+                        break;
                     
                 case 2: menuCargarMapaAleatorio();
-                        return;
+                        break;
                     
                 case 3: menuCargarMapaDesdeFichero();
-                        return;                    
+                        break;                    
             }
+        }
+        
+        //Al cargar un nuevo mapa reseteamos todo.
+        if(opcion > 0 && opcion < 3)
+        {
+            viajero = null;
+            gradosGiros = 0;
+            orientacion = null;
         }
     }
     
@@ -260,10 +260,7 @@ public class Main
         //Solicitamos al usuario que indique el numero de filas.
         while(numFilas <= 0)
         {
-            limpiarPantalla();
-        
-            if(mapa != null)
-                mapa.mostrar();
+            mostrarMapaYdatos();
             
             try
             {
@@ -290,10 +287,7 @@ public class Main
         //Solicitamos al usuario que indique el numero de columnas.
         while(numColumnas <= 0)
         {
-            limpiarPantalla();
-        
-            if(mapa != null)
-                mapa.mostrar();
+            mostrarMapaYdatos();
             
             try
             {
@@ -319,11 +313,8 @@ public class Main
         
         //Solicitamos al usuario que indique el numero de obstaculos.
         while(numObstaculos < 0 || numObstaculos > numFilas*numColumnas)
-        {
-            limpiarPantalla();
-        
-            if(mapa != null)
-                mapa.mostrar();
+        {        
+            mostrarMapaYdatos();
             
             try
             {
@@ -360,10 +351,7 @@ public class Main
     
     private static void menuCargarMapaDesdeFichero()
     {         
-        limpiarPantalla();
-
-        if(mapa != null)
-            mapa.mostrar();                        
+        mostrarMapaYdatos();                        
 
         try
         {
@@ -391,11 +379,8 @@ public class Main
         int opcion = -1;
         
         while(opcion < 0 || opcion > 2)
-        {       
-            limpiarPantalla();
-            
-            if(mapa != null)
-                mapa.mostrar();
+        {          
+            mostrarMapaYdatos();
             
             System.out.print("\nSeleccione el tipo de giros:\n"
                             + "   1 - Giros de 90 grados.\n"
@@ -449,11 +434,8 @@ public class Main
         int opcion = -1;
         
         while((opcion < 0 || opcion > 8) || (gradosGiros == 90 && opcion > 4))
-        {       
-            limpiarPantalla();                 
-            
-            if(mapa != null)
-                mapa.mostrar();
+        {           
+            mostrarMapaYdatos();
             
             if(gradosGiros == 90)
             {
@@ -564,7 +546,7 @@ public class Main
                 return;
             }
             else
-                mapa.mostrar();
+                mostrarMapaYdatos();
             
             if(gradosGiros == 0)
             {
@@ -646,17 +628,14 @@ public class Main
     }    
     
     
-     private static int[] menuAsignarPosicion()
+    private static int[] menuAsignarPosicion()
     {                
         int numFila = -1, numColumna = -1;
         
         //Solicitamos al usuario que indique el numero de filas.
         while(numFila < 0)
         {
-            limpiarPantalla();
-        
-            if(mapa != null)
-                mapa.mostrar();
+            mostrarMapaYdatos();
             
             try
             {
@@ -688,11 +667,8 @@ public class Main
         
         //Solicitamos al usuario que indique el numero de columnas.
         while(numColumna < 0)
-        {
-            limpiarPantalla();
-        
-            if(mapa != null)
-                mapa.mostrar();
+        {    
+            mostrarMapaYdatos();
             
             try
             {
@@ -726,38 +702,108 @@ public class Main
     }
     
    
+    private static void menuAsignarEstrategiaBusqueda()
+    {
+        
+        int opcion = -1;
+        
+        while(opcion < 0 || opcion > 5)
+        {                        
+            mostrarMapaYdatos();
+            
+            System.out.print("\nSeleccione una opcion:\n"
+                            + "   1 - Busqueda ciega en anchura.\n"
+                            + "   2 - Busqueda informada A* - Manhatan (modificada).\n"
+                            + "   3 - Busqueda informada A* - Maximo desplazamiento en filas o columas.\n"
+                            + "   4 - Busqueda informada A* - ... .\n"                            
+                            + "   0 - Atras.\n\n"
+
+                            + "Opcion: ");
+            try
+            {
+                opcion = Integer.parseInt(readLn());
+            }
+            catch(IOException e)
+            {
+                System.out.println("Error leyendo la opcion tecleada.");
+                pausa();
+                continue;
+                
+            }
+            catch(NumberFormatException e)
+            {
+                System.out.println("La opcion seleccionada no es correcta");
+                pausa();
+                continue;
+            }
+            
+            if(opcion < 0 || opcion > 5)
+            {
+                System.out.println("La opcion seleccionada no es correcta");
+                pausa();
+                continue;
+            }
+            
+            switch(opcion)
+            {
+                case 1: estrategiaBusqueda = new BusquedaCiegaEnAnchura();
+                        break;
+                    
+                case 2: estrategiaBusqueda = new BusquedaInformadaManhatan();
+                        break;
+                    
+                case 3: estrategiaBusqueda = new BusquedaInformadaMaximoDesplazamiento();
+                        break;
+                    
+                case 4: //TODO Anadir la ultima estrategia informada
+                        break;
+            }
+        }                
+    }
+    
+    
+    private static void mostrarMapaYdatos()
+    {
+        limpiarPantalla();
+        
+        //Comprobamos si ya se ha cargado algun mapa.
+        if(mapa != null)
+        {
+            //Mostramos el mapa.
+            mapa.mostrar();            
+            
+            //Comprobamos que se haya asignado ya un tipo de giros. En caso afirmativo mostramos los datos.
+            if(gradosGiros != 0)
+            {
+                System.out.print("\033[s"); //Guardamos la posicion del cursor.
+                
+                System.out.printf("\033[4;%dHGiros de: " + gradosGiros + " grados\n", 10+4*mapa.getNumeroColumnas());
+                
+                if(orientacion != null)
+                    System.out.printf("\033[%dGOrientacion: " + orientacion + "\n", 10+4*mapa.getNumeroColumnas());
+                
+                if(viajero != null)
+                    System.out.printf("\033[%dGPosicion: (" + viajero.getPosicion()[0] + "," + 
+                                      viajero.getPosicion()[1] + ")\n", 10+4*mapa.getNumeroColumnas());
+                
+                if(estrategiaBusqueda != null)
+                    System.out.printf("\033[%dGEstrategia: " + estrategiaBusqueda.getTipo() + "\n", 
+                                      10+4*mapa.getNumeroColumnas());
+                
+                if(estrategiaBusqueda != null && !estrategiaBusqueda.getNombreHeuristica().equals(""))
+                    System.out.printf("\033[%dGHeuristica: " + estrategiaBusqueda.getNombreHeuristica() + "\n", 
+                                      10+4*mapa.getNumeroColumnas());
+                
+                System.out.print("\033[u"); //Restauramos la posicion del cursor.            
+            }
+        }
+        
+    }
     
     public static void main(String[] args) 
     {
-//        Viajero v;
-//        Mapa m = new Mapa();
-//        m.mostrar();
-//        
-//        v = new Viajero(m, 90, false);
-//        m.mostrar();
-//        
-//        
-//        Mapa m2 = new Mapa(8, 10, 3);
-//        v = new Viajero(m2, 90, true);
-//        m2.mostrar();
-//         
-//        
-//        Mapa m3 = null;
-//        
-//        try
-//        {
-//            m3 = new Mapa("Tablero.txt");
-//        }
-//        catch(Exception e)
-//        {
-//            System.err.println("Error leyendo el tablero del fichero: " + e.getMessage());
-//            System.exit(-1);
-//        }   
-//        
-//        v = new Viajero(m3, 45, new int[] {3,3}, new int[] {7, 7}, Orientacion.NORTE);
-//        
-//        m3.mostrar();
-
-         menu();
+        introduccion();
+        
+        menu();
     }
 }
