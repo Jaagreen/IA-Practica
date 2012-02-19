@@ -117,10 +117,10 @@ public class Mapa
             throw new IllegalArgumentException("El numero de columnas tiene que ser mayor que 0");
         
         if(numeroObstaculos <= 0)
-            throw new IllegalArgumentException("El numero de ostaculos tiene que ser mayor o igual que 0");
+            throw new IllegalArgumentException("El numero de obstaculos tiene que ser mayor o igual que 0");
         
         if(numeroObstaculos > numeroFilas*numeroColumnas)
-            throw new IllegalArgumentException("El numero de ostaculos es mayor que el numero de posiciones del mapa");
+            throw new IllegalArgumentException("El numero de obstaculos es mayor que el numero de posiciones del mapa");
         
         mapa = new int[numeroFilas][numeroColumnas];
         
@@ -192,7 +192,7 @@ public class Mapa
     
     
     /**
-     * Metodo que muestra por pantalla el estado actual del tablero.
+     * Metodo que muestra por pantalla el estado actual del mapa.
      */
     public void mostrar()
     {

@@ -70,10 +70,7 @@ public class Viajero
     
     public Viajero(Mapa mapa, int gradosGiros, int posInicio[], int posMeta[], Orientacion orientacion)
     {
-        if(gradosGiros != 90 && gradosGiros != 45)
-            throw new IllegalArgumentException("Los giros tienen que ser de 90 o de 45 grados");
-
-        this.gradosGiros = gradosGiros;                
+        setGradosGiros(gradosGiros);               
         this.posInicio = posInicio;
         this.posicion = posInicio;
         this.posMeta = posMeta;
@@ -105,28 +102,45 @@ public class Viajero
         return posMeta;
     }
     
+    public void setPosInicio(int[] posicion)
+    {        
+        setPosicion(this.posInicio, posicion);
+    }    
+    
+    public void setPosMeta(int[] posicion)
+    {
+        setPosicion(this.posMeta, posicion);
+    }
+    
     
     public int[] getPosicion()
     {
         return posicion;
     }
     
-    
     public void setPosicion(int[] posicion)
     {
-        if(posicion[0] < 0)
+        
+        setPosicion(this.posicion, posicion);
+    }
+    
+    
+    private void setPosicion(int[] posicion, int[] nuevaPosicion)
+    {
+        if(nuevaPosicion[0] < 0)
             throw new IllegalArgumentException("El numero de fila indicado tiene que ser mayor o igual a 0");
         
-        if(posicion[0] >= mapa.getNumeroFilas())
+        if(nuevaPosicion[0] >= mapa.getNumeroFilas())
             throw new IllegalArgumentException("El numero de fila indicado es mayor que las filas del mapa");
         
-        if(posicion[1] < 0)
+        if(nuevaPosicion[1] < 0)
             throw new IllegalArgumentException("El numero de columna indicado tiene que ser mayor o igual a 0");
         
-        if(posicion[1] >= mapa.getNumeroColumnas())
+        if(nuevaPosicion[1] >= mapa.getNumeroColumnas())
             throw new IllegalArgumentException("El numero de columna indicado es mayor que las columnas del mapa");
         
-        this.posicion = posicion;
+        posicion[0] = nuevaPosicion[0];
+        posicion[1] = nuevaPosicion[1];
     }
     
     
@@ -135,10 +149,24 @@ public class Viajero
         return orientacion;
     }
     
+    public void setOrientacion(Orientacion orientacion)
+    {
+        this.orientacion = orientacion;
+    }
+    
     
     public int getGradosGiros()
     {
         return gradosGiros;
+    }
+    
+    
+    public final void setGradosGiros(int gradosGiros)
+    {
+        if(gradosGiros != 90 && gradosGiros != 45)
+            throw new IllegalArgumentException("Los giros tienen que ser de 90 o de 45 grados");        
+        
+        this.gradosGiros = gradosGiros;
     }
     
     
