@@ -30,6 +30,7 @@ public class Mapa
                                                     {1,3,1,1,4,1,1,1}
                                                 };
     private int mapa[][];
+    private boolean posicionesAccedidas[][];
     private Viajero viajero;
     
     
@@ -63,8 +64,8 @@ public class Mapa
         StringTokenizer st = new StringTokenizer(filas.getFirst());
         
         //Creamos el mapa con las dimensiones indicadas en el fichero.
-        mapa = new int[filas.size()][st.countTokens()];        
-
+        mapa = new int[filas.size()][st.countTokens()];
+        posicionesAccedidas = new boolean[filas.size()][st.countTokens()];
         
         //Inicializamos el mapa con los valores leidos.
         //Recorremos cada fila del mapa.
@@ -82,6 +83,7 @@ public class Mapa
             for(int j = 0; j < mapa[i].length; j++)
             {                
                 mapa[i][j] = Integer.parseInt(st.nextToken());
+                posicionesAccedidas[i][j] = false;
                 
                 //Comprobamos que el valor leido es correcto.
                 if(mapa[i][j] < 1)
@@ -123,12 +125,15 @@ public class Mapa
             throw new IllegalArgumentException("El numero de obstaculos es mayor que el numero de posiciones del mapa");
         
         mapa = new int[numeroFilas][numeroColumnas];
-        
+        posicionesAccedidas = new boolean[numeroFilas][numeroColumnas];
         
         //Inicializamos el mapa al coste minimo
         for(int i = 0; i < numeroFilas; i++)
             for(int j = 0; j < numeroColumnas; j++)
+            {
                 mapa[i][j] = 1;
+                posicionesAccedidas[i][j] = false;
+            }
         
         
         //Anadimos los obstaculos al mapa.
@@ -154,16 +159,31 @@ public class Mapa
     public final void cargarMapaPorDefecto()
     {
         mapa = mapaPorDefecto;
+                        
+        posicionesAccedidas = new boolean[getNumeroFilas()][getNumeroColumnas()];
+        
+        //Inicializamos como no acceditas todas las posiciones.
+        for(int i = 0; i < mapa.length; i++)
+            for(int j = 0; j < mapa[0].length; j++)
+                posicionesAccedidas[i][j] = false;
         
         if(viajero != null)
+        {
             viajero.cargarPosicionesPorDefecto();
+         
+            //Marcamos la posicion actual del viajero como accedida.
+            posicionesAccedidas[viajero.getPosicion()[0]][viajero.getPosicion()[1]] = true;
+        }
     }
     
     
     public void asignarViajero(Viajero viajero)
     {
         //Anadimos el viajero al mapa.
-        this.viajero = viajero;        
+        this.viajero = viajero; 
+        
+        //Marcamos la posicion actual del viajero como accedida.
+        posicionesAccedidas[viajero.getPosicion()[0]][viajero.getPosicion()[1]] = true;
     }
     
     
@@ -189,6 +209,12 @@ public class Mapa
     {
         return mapa[fila][columna];
     }    
+    
+    
+    public void setPosicionAccedida(int fila, int columna)
+    {
+        posicionesAccedidas[fila][columna] = true;
+    }
     
     
     /**
@@ -232,6 +258,11 @@ public class Mapa
                 {
                     //Escribimos una G (de Gertrudis) en rojo y en negrita.
                     System.out.print("\033[1;31m G \033[0m");
+                }
+                else if(posicionesAccedidas[fila][col] == true) //si la posicion actual ha sido accedida por el viajero.
+                {
+                    //Marcamos las posiciones por las que ha pasado el viajero.
+                    System.out.print("\033[1;31m x \033[0m");
                 }
                 else
                     System.out.print(" " + mapa[fila][col] + " ");
