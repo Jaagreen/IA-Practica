@@ -44,7 +44,6 @@ public class Main
     }
     
     /**
-     * 
      * Metodo empleado para poder leer una cadena de caracteres desde el teclado.
      * @return La cadena de caracteres leida
      * @throws IOException Se lanzara una execpcion de entrada-salida en caso de que no se pueda leer del teclado.
@@ -95,10 +94,44 @@ public class Main
         }
     }
 
+    
+    /**
+     * Metodo que muestra un mensaje de bienvenida y de explicacion de la practica.
+     */
+    private static void introduccion()
+    {
+        System.out.println("\033[1;1H\033[2J\n");  //Limpia la pantalla
+        System.out.println("\033[1;37;46m\033[2K  ==============================================================\033[0m");  
+        System.out.println("\033[1;37;46m\033[2K  |     PRACTICA 1 IA: Resolucion de problemas de busqueda     |\033[0m");  
+        System.out.println("\033[1;37;46m\033[2K  ==============================================================\n\033[0m");  
+        
+        System.out.println("Se desea obtener la mejor ruta para realizar un viaje a un cierto lugar a traves de "
+                         + "un terreno con diversas dificultades. Para ello se dispone de un mapa del terreno "
+                         + "donde se representa el origen, el destino y la dificultad asociada para atravesar los "
+                         + "distintos puntos posibles, pudiendo asociarse ademas un coste a los cambios de direccion "
+                         + "en el camino. El objetivo consiste en utilizar la inteligencia artificial para tratar "
+                         + "de obtener una solucion a este planteamiento, formulandolo como un problema de busqueda. "
+                         + "Para ello se implementan distintos algoritmos de busqueda (ciega e informada).");
+
+        pausa();
+    }
+    
+
+    private static void menu()
+    {
+        introduccion();
+        
+        System.out.println("Seleccione una opcion:\n"
+                         + "   1 - Car");
+                
+    }
+    
     public static void main(String[] args) 
     {
         Viajero v;
-        Mapa m = new Mapa();        
+        Mapa m = new Mapa();
+        m.mostrar();
+        
         v = new Viajero(m, 90, false);
         m.mostrar();
         
@@ -124,5 +157,6 @@ public class Main
         
         m3.mostrar();
 
+         menu();
     }
 }

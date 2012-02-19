@@ -196,8 +196,21 @@ public class Mapa
      */
     public void mostrar()
     {
-        for(int fila = 0; fila < mapa.length; fila++)
+        System.out.print("   ");
+        
+        //Mostramos los indicies superiores.
+        for(int col = 0; col < mapa[0].length; col++)
         {
+            //Indica que apartir de ahi el texto va a ser en azul y en negrita. 
+            System.out.printf("\033[1;34m %2d ", col);                
+        }
+        
+        System.out.println();
+        
+        for(int fila = 0; fila < mapa.length; fila++)
+        {      
+            System.out.print("   ");      
+            
             for(int col = 0; col < mapa[fila].length; col++)
             {
                 //Indica que apartir de ahi el texto va a ser en azul y en negrita. 
@@ -206,7 +219,7 @@ public class Mapa
             System.out.println("-");
             
             //Escribimos un caracter "|" y luego restablecemos las propiedades normales del texto.
-            System.out.print("|\033[0m");
+            System.out.printf("%2d |\033[0m", fila);
             
             for(int col = 0; col < mapa[fila].length; col++)
             {
@@ -229,6 +242,8 @@ public class Mapa
             
             System.out.println();
         }
+        
+        System.out.print("   ");
         
         for(int col = 0; col < mapa[0].length; col++)
         {
