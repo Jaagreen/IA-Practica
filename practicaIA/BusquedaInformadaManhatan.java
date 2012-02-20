@@ -15,9 +15,9 @@ package practicaIA;
  */
 public class BusquedaInformadaManhatan extends EstrategiaBusqueda
 {
-    public BusquedaInformadaManhatan()
+    public BusquedaInformadaManhatan(Viajero viajero)
     {
-        super("Busqueda informada A*", "Manhatan (modificada)");
+        super("Busqueda informada A*", "Manhatan (modificada)", viajero);
     }
 
     @Override

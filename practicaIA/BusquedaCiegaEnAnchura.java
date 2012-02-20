@@ -14,9 +14,9 @@ package practicaIA;
  */
 public class BusquedaCiegaEnAnchura extends EstrategiaBusqueda
 {
-    public BusquedaCiegaEnAnchura()
+    public BusquedaCiegaEnAnchura(Viajero viajero)
     {
-        super("Busqueda ciega en anchura", "");
+        super("Busqueda ciega en anchura", "", viajero);
     }
 
     

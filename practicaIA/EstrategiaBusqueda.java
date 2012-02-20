@@ -16,12 +16,13 @@ public abstract class EstrategiaBusqueda
 {
     private String tipo;
     private String nombreHeuristica;
+    Viajero viajero;
     
-    
-    public EstrategiaBusqueda(String tipo, String nombreHeuristica)
+    public EstrategiaBusqueda(String tipo, String nombreHeuristica, Viajero viajero)
     {
         this.tipo = tipo;
         this.nombreHeuristica = nombreHeuristica;                
+        this.viajero = viajero;
     }
     
     
@@ -34,6 +35,12 @@ public abstract class EstrategiaBusqueda
     public String getNombreHeuristica()
     {
         return nombreHeuristica;
+    }
+    
+    
+    public Viajero getViajero()
+    {
+        return viajero;
     }
     
     

@@ -704,6 +704,12 @@ public class Main
    
     private static void menuAsignarEstrategiaBusqueda()
     {
+        if(viajero == null)
+        {
+            System.out.println("\nTiene que indicar las posiciones antes de asignar una estrategia de busqueda.");
+            pausa();
+            return;
+        }        
         
         int opcion = -1;
         
@@ -746,13 +752,13 @@ public class Main
             
             switch(opcion)
             {
-                case 1: estrategiaBusqueda = new BusquedaCiegaEnAnchura();
+                case 1: estrategiaBusqueda = new BusquedaCiegaEnAnchura(viajero);
                         break;
                     
-                case 2: estrategiaBusqueda = new BusquedaInformadaManhatan();
+                case 2: estrategiaBusqueda = new BusquedaInformadaManhatan(viajero);
                         break;
                     
-                case 3: estrategiaBusqueda = new BusquedaInformadaMaximoDesplazamiento();
+                case 3: estrategiaBusqueda = new BusquedaInformadaMaximoDesplazamiento(viajero);
                         break;
                     
                 case 4: //TODO Anadir la ultima estrategia informada

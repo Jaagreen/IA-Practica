@@ -15,9 +15,9 @@ package practicaIA;
  */
 public class BusquedaInformadaMaximoDesplazamiento extends EstrategiaBusqueda
 {
-    public BusquedaInformadaMaximoDesplazamiento()
+    public BusquedaInformadaMaximoDesplazamiento(Viajero viajero)
     {
-        super("Busqueda informada A*", "Maximo desplazamiento en filas o columnas");
+        super("Busqueda informada A*", "Maximo desplazamiento en filas o columnas", viajero);
     }
 
     @Override
