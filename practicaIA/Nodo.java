@@ -7,6 +7,7 @@
 
 package practicaIA;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,6 +25,15 @@ public class Nodo
     private int coste;
     private int valorHeuristica;
     private boolean nodoExplorado;
+    
+    public Nodo(int posicion[], Orientacion orientacion)
+    {
+        this.posicion = posicion;
+        this.orientacion = orientacion;        
+        sucesores = new LinkedList<Nodo>();
+        nodoExplorado = false;
+    }
+    
     
     public Nodo(int posicion[], Orientacion orientacion, Nodo padre, int coste, int valorHeuristica)
     {
@@ -126,5 +136,29 @@ public class Nodo
     public String toString()
     {
         return "(" + estado() + "," + coste + "," + valorHeuristica + ")";
+    }
+    
+    
+    @Override
+    public boolean equals(Object o)
+    {
+        if(!(o instanceof Nodo))
+            return false;
+        
+        Nodo nodo = (Nodo) o;
+        
+        return nodo.getPosicion()[0] == posicion[0] && 
+               nodo.getPosicion()[1] == posicion[1] &&
+               nodo.getOrientacion() == orientacion;
+    }
+
+
+    @Override
+    public int hashCode()
+    {
+        int hash = 7;
+        hash = 41 * hash + Arrays.hashCode(this.posicion);
+        hash = 41 * hash + (this.orientacion != null ? this.orientacion.hashCode() : 0);
+        return hash;
     }
 }
