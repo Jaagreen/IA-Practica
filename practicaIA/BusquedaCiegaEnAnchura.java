@@ -39,5 +39,12 @@ public class BusquedaCiegaEnAnchura extends EstrategiaBusqueda
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+
+    @Override
+    public void resetear(Mapa mapa)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
     
 }

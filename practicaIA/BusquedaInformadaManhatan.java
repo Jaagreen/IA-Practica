@@ -21,6 +21,9 @@ public class BusquedaInformadaManhatan extends EstrategiaBusqueda
 {
     private Set<Nodo> nodosAbiertos;
     private Set<Nodo> nodosCerrados;
+    private Nodo nodoInicial = null;
+    private boolean solucionEncontrada = false;
+    private Nodo mejorNodo;
     
     public BusquedaInformadaManhatan(Mapa mapa)
     {
@@ -31,6 +34,16 @@ public class BusquedaInformadaManhatan extends EstrategiaBusqueda
         this.nodosCerrados = new HashSet<Nodo>();
     }
      
+    
+    @Override
+    public void resetear(Mapa mapa)
+    {        
+        super.resetear(mapa);        
+        this.nodosAbiertos = new HashSet<Nodo>();
+        this.nodosCerrados = new HashSet<Nodo>();                
+        nodoInicial = null;
+        solucionEncontrada = false;
+    }
     
     /**
      * Metodo que devuelve el numero minimo de giros a realizar con respecto a la
@@ -206,125 +219,135 @@ public class BusquedaInformadaManhatan extends EstrategiaBusqueda
         return null;
     }
     
-    
-    @Override
-    public void buscar()
-    {       
-        //Creamos el nodo inicial con los datos de la posicion de inicio del viajero y su orientacion.
-        Nodo nodoInicial = new Nodo(getViajero().getPosInicio(), getViajero().getOrientacion());
-        
-        //Como es el primer no no tiene padre.
-        nodoInicial.setPadre(null);
-        
-        //Como es el primer nodo el coste para llegar hasta el es 0.
-        nodoInicial.setCoste(0);
-        
-        //Le asignamos el valor de heuristica que le corresponde.
-        nodoInicial.setValorHeuristica(funcionHeuristica(nodoInicial));
-        
-        //Anadimos el nodo inicial en la lista de nodos abiertos.
-        nodosAbiertos.add(nodoInicial);
-        
-        //Mientras que haya nodos en la lista de nodos abiertos.
-        while(!nodosAbiertos.isEmpty())
-        {            
-            //Obtenemso el primer nodo de la lista de nodos abiertos.
-            Nodo mejorNodo = nodosAbiertos.iterator().next();
-            
-            //Buscamos en la lista de nodos abiertos el nodo que mejor valor de la funcion f() tenga. 
-            //Cuanto menos valor de f() mejor es el nodo. f = coste + valorFuncionHeuristica.
-            for(Nodo nodo: nodosAbiertos)
-            {
-                if(nodo.f() < mejorNodo.f())
-                    mejorNodo = nodo;
-            }
-            
-            nodosAbiertos.remove(mejorNodo);
-            
-            System.out.println("\nMejor nodo = " + mejorNodo);
-            
-            //Quitamos el mejorNodo de la lista de nodos abiertos y lo metemos en la lista de nodos cerrados.
-            nodosCerrados.add(mejorNodo);
-            
-            
-            //Comprobamos si el mejor nodo selecionado es meta.
-            if(esNodoMeta(mejorNodo))
-            {
-                System.out.println("¡¡¡SOLUCION ENCONTRADA!!!");
-                mostrarCaminoSeguido(mejorNodo);                                
-                break;
-            }
+    private void inicializarBusqueda()
+    {
+        //Si aun no se ha iniciado la busqueda el nodoInicial tendra valor null.
+        //Eso indica que la inicializacion aun no se ha hecho.
+        if(nodoInicial == null)
+        {
+            //Creamos el nodo inicial con los datos de la posicion de inicio del viajero y su orientacion.
+            nodoInicial = new Nodo(getViajero().getPosicion(), getViajero().getOrientacion());
 
+            //Como es el primer no no tiene padre.
+            nodoInicial.setPadre(null);
+
+            //Como es el primer nodo el coste para llegar hasta el es 0.
+            nodoInicial.setCoste(0);
+
+            //Le asignamos el valor de heuristica que le corresponde.
+            nodoInicial.setValorHeuristica(funcionHeuristica(nodoInicial));
+
+            //Anadimos el nodo inicial en la lista de nodos abiertos.
+            nodosAbiertos.add(nodoInicial);        
+        }
+    }
+    
+    private boolean realizarIteracionDeBusqueda()
+    {
+        //Obtenemso el primer nodo de la lista de nodos abiertos.
+        mejorNodo = nodosAbiertos.iterator().next();
+
+        //Buscamos en la lista de nodos abiertos el nodo que mejor valor de la funcion f() tenga. 
+        //Cuanto menos valor de f() mejor es el nodo. f = coste + valorFuncionHeuristica.
+        for(Nodo nodo: nodosAbiertos)
+        {
+            if(nodo.f() <= mejorNodo.f())
+                mejorNodo = nodo;
+        }
+
+        nodosAbiertos.remove(mejorNodo);
+
+        //Quitamos el mejorNodo de la lista de nodos abiertos y lo metemos en la lista de nodos cerrados.
+        nodosCerrados.add(mejorNodo);
+
+
+        //Comprobamos si el mejor nodo selecionado es meta.
+        if(esNodoMeta(mejorNodo))
+        {
             //Situamos al viajero en la posicion del mejor nodo.
             getViajero().setPosicionYorientacion(mejorNodo);
-
-            
-            getMapa().setPosicionAccedida(mejorNodo.getPosicion()[0], mejorNodo.getPosicion()[1]);
-            
-            for(Nodo sucesor: getViajero().getNodosSucesores())
-            {
-                //Asignamos como padre de cada nodo suceso al nodo mejorNodo.
-                sucesor.setPadre(mejorNodo);
-                
-                //El coste de cada nodo sucesor es el coste de ir hasta el mejorNodo 
-                //mas el coste de ir desde el mejorNodo hasta el nodo sucesor actual.
-                sucesor.setCoste(mejorNodo.getCoste() + 
-                                 getMapa().getDificultadPosicion(sucesor.getPosicion()[0], 
-                                                                 sucesor.getPosicion()[1]));
-                              
-                Nodo viejo;
-                
-                //Comprobamos si ya existia el nodo en el conjunto de nodos abiertos.
-                if((viejo = existeNodoEnAbiertos(sucesor)) != null)
-                {
-                    mejorNodo.addSucesor(viejo);
-                    
-                    //Analizamos si el nuevo padre que hemos encontrado para el nodo viejo
-                    //es mejor que el que tenia, y si es asi actualizarmos el coste y enlace paterno,
-                    //de modo que en el grafo queden reflejados solo los caminos optimos.
-                    //Entoces, si el coste para llegar al nodo viejo es mayor que para el nodo sucesor.
-                    if(viejo.getCoste() > sucesor.getCoste())
-                    {
-                        viejo.setPadre(mejorNodo); //Al nodo viejo le asignamos como padre el nodo mejorNodo.
-                        viejo.setCoste(sucesor.getCoste()); //Actualizamos el coste del nodo.
-                    }
-                }
-                //Comprobamos si ya existia el nodo en el conjunto de nodos cerrados.
-                else if((viejo = existeNodoEnCerrados(sucesor)) != null)
-                {
-                    
-                    mejorNodo.addSucesor(viejo);
-                    
-                    //Si el coste para llegar al nodo viejo es mayor que para el nodo sucesor.
-                    if(viejo.getCoste() > sucesor.getCoste())
-                    {
-                        viejo.setPadre(mejorNodo); //Al nodo viejo le asignamos como padre el nodo mejorNodo.
-                        viejo.setCoste(sucesor.getCoste()); //Actualizamos el coste del nodo.
-                        
-                        //Propagamos el nuevo mejor coste realizando un recorrido en 
-                        //profundidad a partir del nodo viejo.
-                        propagarMejora(viejo);
-                    }
-                }
-                else //Si el nodo no existe en el conjunto de abiertos ni de cerrados.
-                {                    
-                    //Le asignamos el valor de heuristica que le corresponde.
-                    sucesor.setValorHeuristica(funcionHeuristica(sucesor));
-                    
-                    //Anadimos el nodo al conjunto de nodos abiertos.
-                    nodosAbiertos.add(sucesor);
-                    
-                    //Anadimos el nodo como sucesor del nodo mejorNodo.
-                    mejorNodo.addSucesor(sucesor);
-                }                                
-            }
+            return true;
         }
         
-        if(nodosAbiertos.isEmpty())
-            System.out.println("No se ha podido encontrar la solucion al problema.");
+
+        //Situamos al viajero en la posicion del mejor nodo.
+        getViajero().setPosicionYorientacion(mejorNodo);
+
+
+        getMapa().setPosicionAccedida(mejorNodo.getPosicion());
+
+        for(Nodo sucesor: getViajero().getNodosSucesores())
+        {
+            //Asignamos como padre de cada nodo suceso al nodo mejorNodo.
+            sucesor.setPadre(mejorNodo);
+
+            //Si el nodo sucesor esta orientado en la misma direccion es por que
+            //lo que se ha hecho es avanzar.
+            if(sucesor.getOrientacion().equals(mejorNodo.getOrientacion()))
+            {
+                //El coste de cada nodo sucesor es el coste de ir hasta el mejorNodo 
+                //mas el coste de ir desde el mejorNodo hasta el nodo sucesor actual.
+                sucesor.setCoste(mejorNodo.getCoste() +                              
+                             getMapa().getDificultadPosicion(sucesor.getPosicion()[0], 
+                                                             sucesor.getPosicion()[1]));
+            }
+            else //Si la direccion es distinta lo que se ha hecho es girar por tanto el coste es 1.
+            {
+                //Si se ha realizado un cambio de direccion sumamos uno al coste total.
+                sucesor.setCoste(mejorNodo.getCoste() + 1);
+            }
+            
+            Nodo viejo;
+
+            //Comprobamos si ya existia el nodo en el conjunto de nodos abiertos.
+            if((viejo = existeNodoEnAbiertos(sucesor)) != null)
+            {
+                mejorNodo.addSucesor(viejo);
+
+                //Analizamos si el nuevo padre que hemos encontrado para el nodo viejo
+                //es mejor que el que tenia, y si es asi actualizarmos el coste y enlace paterno,
+                //de modo que en el grafo queden reflejados solo los caminos optimos.
+                //Entoces, si el coste para llegar al nodo viejo es mayor que para el nodo sucesor.
+                if(viejo.getCoste() > sucesor.getCoste())
+                {
+                    viejo.setPadre(mejorNodo); //Al nodo viejo le asignamos como padre el nodo mejorNodo.
+                    viejo.setCoste(sucesor.getCoste()); //Actualizamos el coste del nodo.
+                }
+            }
+            //Comprobamos si ya existia el nodo en el conjunto de nodos cerrados.
+            else if((viejo = existeNodoEnCerrados(sucesor)) != null)
+            {
+
+                mejorNodo.addSucesor(viejo);
+
+                //Si el coste para llegar al nodo viejo es mayor que para el nodo sucesor.
+                if(viejo.getCoste() > sucesor.getCoste())
+                {
+                    viejo.setPadre(mejorNodo); //Al nodo viejo le asignamos como padre el nodo mejorNodo.
+                    viejo.setCoste(sucesor.getCoste()); //Actualizamos el coste del nodo.
+
+                    //Propagamos el nuevo mejor coste realizando un recorrido en 
+                    //profundidad a partir del nodo viejo.
+                    propagarMejora(viejo);
+                }
+            }
+            else //Si el nodo no existe en el conjunto de abiertos ni de cerrados.
+            {                    
+                //Le asignamos el valor de heuristica que le corresponde.
+                sucesor.setValorHeuristica(funcionHeuristica(sucesor));
+
+                //Anadimos el nodo al conjunto de nodos abiertos.
+                nodosAbiertos.add(sucesor);
+
+                //Anadimos el nodo como sucesor del nodo mejorNodo.
+                mejorNodo.addSucesor(sucesor);
+            }                                
+        }  
         
-        Funciones.pausa();
+        //El mejor nodo seleccionado no era la posicion de meta.
+        return false;
     }
+    
     
     private void mostrarCaminoSeguido(Nodo mejorNodo)
     {       
@@ -338,12 +361,150 @@ public class BusquedaInformadaManhatan extends EstrategiaBusqueda
             mejorNodo = mejorNodo.getPadre();
         }
 
+        System.out.println("CAMINO SEGUIDO:");
         //Mostramos el camino optimo.        
         for(int i = 0; i < (camino.size()-1); i++)
             System.out.print(camino.get(i) + " -> ");
 
-        System.out.println(camino.getLast());
+        System.out.println(camino.getLast() + "\n");
     }
+    
+    
+    private void mostrarNodosAbiertos()
+    {
+        System.out.println("\nNODOS ABIERTOS:");
+        
+        //Mostramos el conjunto de nodos abiertos.
+        for(Nodo nodo: nodosAbiertos)
+            System.out.print(nodo + " - ");        
+        
+        System.out.println("\n");
+    }
+    
+    
+    private void mostrarSucesoresDelMejorNodo()
+    {
+        System.out.println("SUCESORES DEL MEJOR NODO:");
+        
+        //Mostramos el conjunto de nodos descendientes del mejorNodo.
+        for(Nodo sucesor: mejorNodo.getSucesores())
+            System.out.print(sucesor + " - ");   
+        
+        System.out.println("\n");
+    }   
+    
+    
+    private void marcarPosicionesCaminoEncontrado()
+    {
+        if(solucionEncontrada)
+        {
+            getMapa().borrarPosicionesAccedidas();
+
+            Nodo n = mejorNodo;
+            while(n != null)
+            {
+                getMapa().setPosicionAccedida(n.getPosicion());
+                n = n.getPadre();
+            }
+        }
+    }
+    
+    
+    @Override
+    public void buscar()
+    {       
+        inicializarBusqueda();
+
+        Funciones.limpiarPantalla();
+        
+        //Mientras que haya nodos en la lista de nodos abiertos.
+        while(!nodosAbiertos.isEmpty() && !solucionEncontrada)
+        {            
+            solucionEncontrada = realizarIteracionDeBusqueda();
+        }
+        
+        marcarPosicionesCaminoEncontrado();
+        
+        getMapa().mostrar();
+        mostarInformacion();
+
+        mostrarNodosAbiertos();
+
+        System.out.println("MEJOR NODO: " + mejorNodo + "\n");
+
+        mostrarCaminoSeguido(mejorNodo);
+
+        mostrarSucesoresDelMejorNodo();
+            
+        if(solucionEncontrada)
+        {
+            System.out.println("¡¡¡SOLUCION ENCONTRADA!!!");
+        }
+        else if(nodosAbiertos.isEmpty())
+        {
+            System.out.println("No se ha podido encontrar la solucion al problema.");
+        }
+        
+        Funciones.pausa();
+        
+        //Restauramos el valor de solucionEncotrada por si se quiere volver a realizar la busqueda.
+        solucionEncontrada = false;
+    }
+    
+    
+    @Override
+    public void buscarIteraionAiteracion()
+    {
+        inicializarBusqueda();
+        
+        Funciones.limpiarPantalla();
+        
+        getMapa().mostrar();
+        mostarInformacion();       
+        mostrarNodosAbiertos();
+        System.out.println("MEJOR NODO: \n\n" +
+                           "CAMINO SEGUIDO:\n\n\n" +
+                           "SUCESORES DEL MEJOR NODO:\n\n");
+
+        Funciones.pausa();
+        
+        //Mientras que haya nodos en la lista de nodos abiertos.
+        while(!nodosAbiertos.isEmpty() && !solucionEncontrada)
+        {            
+            solucionEncontrada = realizarIteracionDeBusqueda();
+            
+            Funciones.limpiarPantalla();            
+            getMapa().mostrar();
+            mostarInformacion();
+            
+            mostrarNodosAbiertos();
+            
+            System.out.println("MEJOR NODO: " + mejorNodo + "\n");
+            
+            mostrarCaminoSeguido(mejorNodo);
+            
+            mostrarSucesoresDelMejorNodo();
+            
+            Funciones.pausa();
+        }
+        
+        marcarPosicionesCaminoEncontrado();
+        
+        if(solucionEncontrada)
+        {
+            System.out.println("\n¡¡¡SOLUCION ENCONTRADA!!!");
+        }
+        else if(nodosAbiertos.isEmpty())
+        {
+            System.out.println("No se ha podido encontrar la solucion al problema.");
+        }
+        
+        Funciones.pausa();   
+        
+        //Restauramos el valor de solucionEncotrada por si se quiere volver a realizar la busqueda.
+        solucionEncontrada = false;
+    }
+        
     
     /**
      *  Metodo para propagar la mejora obtenida sobre el coste del nodo indicado
@@ -389,13 +550,6 @@ public class BusquedaInformadaManhatan extends EstrategiaBusqueda
     
     @Override
     public void mostrarEstadoActual()
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-
-    @Override
-    public void buscarIteraionAiteracion()
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }

@@ -44,16 +44,16 @@ public class Viajero
                 
         //Generamos una posicion de inicio aleatoria.
         posInicio[0] = Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroFilas()-1);
-        posInicio[0] = Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroColumnas()-1);
+        posInicio[1] = Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroColumnas()-1);
 
-        posicion[0] = posInicio[1];
+        posicion[0] = posInicio[0];
         posicion[1] = posInicio[1];
 
         //Generamos una posicion de meta aleatoria.
         do
         {
-            posMeta = new int[] {Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroFilas()-1),
-                                    Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroColumnas()-1)};
+            posMeta[0] = Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroFilas()-1);
+            posMeta[1] = Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroColumnas()-1);
         }
         //Si la posicion de inicio y de meta coinciden entonces generamos otra posicion de meta.
         while(posInicio[0] == posMeta[0] && posInicio[1] == posMeta[1]);
@@ -68,7 +68,8 @@ public class Viajero
             orientacion = Orientacion.getOrientacionById(Funciones.obtenerNumeroAleatorio(0, Orientacion.values().length -1));
         
         //Asignamos este viajero al mapa.
-        mapa.asignarViajero(this);
+        mapa.asignarViajero(this);        
+        mapa.borrarPosicionesAccedidas();
     }
     
     
@@ -92,6 +93,7 @@ public class Viajero
         
         //Asignamos este viajero al mapa.
         mapa.asignarViajero(this);
+        mapa.borrarPosicionesAccedidas();
         
         cargarPosicionesPorDefecto();        
     }
@@ -99,15 +101,16 @@ public class Viajero
     
     public Viajero(Mapa mapa, int gradosGiros, int posInicio[], int posMeta[], Orientacion orientacion)
     {
+        this.orientacion = orientacion;
+        this.mapa = mapa;       
         setGradosGiros(gradosGiros);               
         setPosInicio(posInicio);
         setPosMeta(posMeta);
         setPosicion(posInicio);
-        this.orientacion = orientacion;
-        this.mapa = mapa;
 
         //Asignamos este viajero al mapa.
         mapa.asignarViajero(this);
+        mapa.borrarPosicionesAccedidas();
     }
     
     
@@ -134,11 +137,13 @@ public class Viajero
     public final void setPosInicio(int[] posicion)
     {        
         setPosicion(this.posInicio, posicion);
+        mapa.borrarPosicionesAccedidas();
     }    
     
     public final void setPosMeta(int[] posicion)
     {
         setPosicion(this.posMeta, posicion);
+        mapa.borrarPosicionesAccedidas();
     }
     
     

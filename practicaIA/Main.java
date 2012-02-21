@@ -77,6 +77,7 @@ public class Main
                             + "   4 - Posiciones.\n"
                             + "   5 - Metodo de busqueda.\n"
                             + "   6 - Iniciar busqueda.\n"
+                            + "   7 - Iniciar busqueda iteracion a iteracion.\n"
                             + "   0 - Salir.\n\n"
 
                             + "Opcion: ");
@@ -98,7 +99,7 @@ public class Main
                 continue;
             }
             
-            if(opcion < 0 || opcion > 6)
+            if(opcion < 0 || opcion > 7)
             {
                 System.out.println("La opcion seleccionada no es correcta");
                 pausa();
@@ -122,7 +123,26 @@ public class Main
                 case 5: menuAsignarEstrategiaBusqueda();
                         break;
                     
-                case 6: estrategiaBusqueda.buscar();  //TODO IMPLEMENTAR UN MENU Y CONTROLES DE EJECUCION
+                case 6: if(estrategiaBusqueda == null)
+                        {
+                            System.out.println("\nTiene que indicar una estrategia de busqueda antes de comenzar la busqueda.");
+                            pausa();
+                            return;
+                        }
+                    
+                        estrategiaBusqueda.resetear(mapa);
+                        estrategiaBusqueda.buscar();  //TODO IMPLEMENTAR UN MENU Y CONTROLES DE EJECUCION
+                        break;
+                    
+                case 7: if(estrategiaBusqueda == null)
+                        {
+                            System.out.println("\nTiene que indicar una estrategia de busqueda antes de comenzar la busqueda.");
+                            pausa();
+                            return;
+                        }
+                    
+                        estrategiaBusqueda.resetear(mapa);
+                        estrategiaBusqueda.buscarIteraionAiteracion();  //TODO IMPLEMENTAR UN MENU Y CONTROLES DE EJECUCION
                         break;
             }
         }                
@@ -537,21 +557,30 @@ public class Main
             
             switch(opcion)
             {
-                case 1: viajero = new Viajero(mapa, gradosGiros, orientacion);
+                case 1: viajero = new Viajero(mapa, gradosGiros, orientacion);                        
                         return;
                     
                 case 2: viajero = new Viajero(mapa, gradosGiros);
                         return;
                     
                 case 3: if(viajero != null)
+                        {
                             viajero.setPosInicio(solicitarPosicion());
+                            viajero.setPosicion(viajero.getPosInicio());
+                            mapa.asignarViajero(viajero);
+                            return;
+                        }
                         else
                             posicionIncio = solicitarPosicion();
                 
                         break;                    
                     
                 case 4: if(viajero != null)
+                        {
                             viajero.setPosMeta(solicitarPosicion());
+                            mapa.asignarViajero(viajero);
+                            return;
+                        }
                         else
                             posicionMeta = solicitarPosicion();
                 
@@ -723,14 +752,7 @@ public class Main
                 System.out.print("\033[s"); //Guardamos la posicion del cursor.
                 
                 System.out.printf("\033[4;%dHGiros de: " + gradosGiros + " grados\n", 10+4*mapa.getNumeroColumnas());
-                
-                if(orientacion != null)
-                    System.out.printf("\033[%dGOrientacion: " + orientacion + "\n", 10+4*mapa.getNumeroColumnas());
-                
-                if(viajero != null)
-                    System.out.printf("\033[%dGPosicion: (" + viajero.getPosicion()[0] + "," + 
-                                      viajero.getPosicion()[1] + ")\n", 10+4*mapa.getNumeroColumnas());
-                
+                                
                 if(estrategiaBusqueda != null)
                     System.out.printf("\033[%dGEstrategia: " + estrategiaBusqueda.getTipo() + "\n", 
                                       10+4*mapa.getNumeroColumnas());
@@ -740,10 +762,21 @@ public class Main
                                       10+4*mapa.getNumeroColumnas());
                 
                 if(viajero != null)
+                {
                     System.out.printf("\033[%dGCoste posicion G: " + 
                                       mapa.getDificultadPosicion(viajero.getPosMeta()[0], 
                                                                  viajero.getPosMeta()[1]) + 
                                       "\n", 10+4*mapa.getNumeroColumnas());
+                
+                    System.out.printf("\033[%dGPosicion: (" + viajero.getPosicion()[0] + "," + 
+                                      viajero.getPosicion()[1] + ")\n", 10+4*mapa.getNumeroColumnas());                
+                    
+                    System.out.printf("\033[%dGOrientacion: " + viajero.getOrientacion() + "\n",
+                                      10+4*mapa.getNumeroColumnas());
+                }
+                    
+                if(orientacion != null && viajero == null)
+                    System.out.printf("\033[%dGOrientacion: " + orientacion + "\n", 10+4*mapa.getNumeroColumnas());
                 
                 System.out.print("\033[u"); //Restauramos la posicion del cursor.            
             }

@@ -51,7 +51,7 @@ public class Funciones
         {
             System.out.print("\nPulse ENTER para continuar . . .");
             readLn();
-            System.out.println("\033[1;1H\033[2J");	//Limpia la pantalla.	
+            //System.out.println("\033[1;1H\033[2J");	//Limpia la pantalla.	
         }
         catch (IOException ioe) //Capturamos y gestionamos las excepciones de entrar-salida.
         {

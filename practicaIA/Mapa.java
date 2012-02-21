@@ -211,9 +211,16 @@ public class Mapa
     }    
     
     
-    public void setPosicionAccedida(int fila, int columna)
+    public void setPosicionAccedida(int posicion[])
     {
-        posicionesAccedidas[fila][columna] = true;
+        posicionesAccedidas[posicion[0]][posicion[1]] = true;
+    }
+    
+    public void borrarPosicionesAccedidas()
+    {
+        for(int i = 0; i < mapa.length; i++)
+            for(int j = 0; j < mapa[i].length; j++)
+                posicionesAccedidas[i][j] = false;
     }
     
     

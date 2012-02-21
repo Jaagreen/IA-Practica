@@ -70,4 +70,40 @@ public abstract class EstrategiaBusqueda
     
     public abstract void buscarIteraionAiteracion();
     
+    public void resetear(Mapa mapa)
+    {
+        this.mapa = mapa;
+        this.viajero = mapa.getViajero();
+    }
+    
+    public void mostarInformacion()
+    {
+        System.out.print("\033[s"); //Guardamos la posicion del cursor.
+
+        System.out.printf("\033[4;%dHGiros de: " + viajero.getGradosGiros() + " grados\n", 10+4*mapa.getNumeroColumnas());
+
+        
+        System.out.printf("\033[%dGEstrategia: " + tipo + "\n", 10+4*mapa.getNumeroColumnas());
+
+        if(!nombreHeuristica.equals(""))
+            System.out.printf("\033[%dGHeuristica: " + nombreHeuristica + "\n", 
+                                10+4*mapa.getNumeroColumnas());
+
+        System.out.printf("\033[%dGCoste posicion G: " + 
+                          mapa.getDificultadPosicion(viajero.getPosMeta()[0], 
+                                                     viajero.getPosMeta()[1]) + 
+                          "\n", 10+4*mapa.getNumeroColumnas());
+
+        
+        System.out.printf("\033[%dGOrientacion: " + viajero.getOrientacion() + "\n", 10+4*mapa.getNumeroColumnas());
+
+        System.out.printf("\033[%dGPosicion: (" + viajero.getPosicion()[0] + "," + 
+                          viajero.getPosicion()[1] + ")\n", 10+4*mapa.getNumeroColumnas());
+
+        System.out.printf("\033[%dGNodo: ([(fila, col) orientacion], coste, heuristica)", 
+                           10+4*mapa.getNumeroColumnas());
+        
+        System.out.print("\033[u"); //Restauramos la posicion del cursor.         
+    }
+    
 }
