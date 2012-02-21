@@ -16,13 +16,15 @@ public abstract class EstrategiaBusqueda
 {
     private String tipo;
     private String nombreHeuristica;
-    Viajero viajero;
+    private Viajero viajero;
+    private Mapa mapa;
     
-    public EstrategiaBusqueda(String tipo, String nombreHeuristica, Viajero viajero)
+    public EstrategiaBusqueda(String tipo, String nombreHeuristica, Mapa mapa)
     {
         this.tipo = tipo;
         this.nombreHeuristica = nombreHeuristica;                
-        this.viajero = viajero;
+        this.mapa = mapa;
+        this.viajero = mapa.getViajero();
     }
     
     
@@ -38,12 +40,32 @@ public abstract class EstrategiaBusqueda
     }
     
     
+    public Mapa getMapa()
+    {
+        return mapa;
+    }
+    
+    
     public Viajero getViajero()
     {
         return viajero;
     }
     
+    /**
+     * Metodo que determina si un nodo es solucion del problema, es decir, si el nodo
+     * es la posicon de destino a la que quiere llegar el viajero.
+     * @param nodo Nodo al que se le quiere realizar la prueba de meta.
+     * @return True si la posicion del nodo coincide con la de la meta, false en caso contrario.
+     */
+    public boolean esNodoMeta(Nodo nodo)
+    {
+        //Un nodo es meta si coindide con la posicion de meta a la que quiere llegar el viajero.
+        return nodo.getPosicion()[0] == viajero.getPosMeta()[0] &&
+               nodo.getPosicion()[1] == viajero.getPosMeta()[1];
+    }
     
     public abstract void mostrarEstadoActual();
+    
+    public abstract void buscar();
     
 }

@@ -15,13 +15,20 @@ package practicaIA;
  */
 public class BusquedaInformadaMaximoDesplazamiento extends EstrategiaBusqueda
 {
-    public BusquedaInformadaMaximoDesplazamiento(Viajero viajero)
+    public BusquedaInformadaMaximoDesplazamiento(Mapa mapa)
     {
-        super("Busqueda informada A*", "Maximo desplazamiento en filas o columnas", viajero);
+        super("Busqueda informada A*", "Maximo desplazamiento en filas o columnas", mapa);
     }
 
     @Override
     public void mostrarEstadoActual()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+
+    @Override
+    public void buscar()
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }

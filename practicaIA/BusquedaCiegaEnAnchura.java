@@ -14,14 +14,21 @@ package practicaIA;
  */
 public class BusquedaCiegaEnAnchura extends EstrategiaBusqueda
 {
-    public BusquedaCiegaEnAnchura(Viajero viajero)
+    public BusquedaCiegaEnAnchura(Mapa mapa)
     {
-        super("Busqueda ciega en anchura", "", viajero);
+        super("Busqueda ciega en anchura", "", mapa);
     }
 
     
     @Override
     public void mostrarEstadoActual()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+
+    @Override
+    public void buscar()
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }

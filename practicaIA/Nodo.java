@@ -8,8 +8,8 @@
 package practicaIA;
 
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Clase que representa cada uno de los nodos del arbol de busqueda.
@@ -21,7 +21,7 @@ public class Nodo
     private int posicion[];
     private Orientacion orientacion;
     private Nodo padre;
-    private List<Nodo> sucesores;
+    private Set<Nodo> sucesores;
     private int coste;
     private int valorHeuristica;
     private boolean nodoExplorado;
@@ -30,7 +30,7 @@ public class Nodo
     {
         this.posicion = posicion;
         this.orientacion = orientacion;        
-        sucesores = new LinkedList<Nodo>();
+        sucesores = new HashSet<Nodo>();
         nodoExplorado = false;
     }
     
@@ -42,7 +42,7 @@ public class Nodo
         this.padre = padre;
         this.coste = coste;
         this.valorHeuristica = valorHeuristica;
-        sucesores = new LinkedList<Nodo>();
+        sucesores = new HashSet<Nodo>();
         nodoExplorado = false;
     }
     
@@ -86,7 +86,13 @@ public class Nodo
     }
     
     
-    public List<Nodo> getSucesores()
+    public void setValorHeuristica(int valorHeuristica)
+    {
+        this.valorHeuristica = valorHeuristica;
+    }
+    
+    
+    public Set<Nodo> getSucesores()
     {
         return sucesores;
     }
@@ -157,8 +163,8 @@ public class Nodo
     public int hashCode()
     {
         int hash = 7;
-        hash = 41 * hash + Arrays.hashCode(this.posicion);
-        hash = 41 * hash + (this.orientacion != null ? this.orientacion.hashCode() : 0);
+        hash += 41 * hash + Arrays.hashCode(this.posicion);
+        hash += 41 * hash + (this.orientacion != null ? this.orientacion.hashCode() : 0);
         return hash;
     }
 }

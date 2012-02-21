@@ -25,6 +25,8 @@ package practicaIA;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -183,7 +185,7 @@ public class Main
                 case 5: menuAsignarEstrategiaBusqueda();
                         break;
                     
-                case 6: menuCargarMapa();
+                case 6: estrategiaBusqueda.buscar();  //TODO IMPLEMENTAR UN MENU Y CONTROLES DE EJECUCION
                         break;
             }
         }                
@@ -598,23 +600,23 @@ public class Main
             
             switch(opcion)
             {
-                case 1: viajero = new Viajero(mapa, gradosGiros, false);
+                case 1: viajero = new Viajero(mapa, gradosGiros, orientacion);
                         return;
                     
-                case 2: viajero = new Viajero(mapa, gradosGiros, true);
+                case 2: viajero = new Viajero(mapa, gradosGiros);
                         return;
                     
                 case 3: if(viajero != null)
-                            viajero.setPosInicio(menuAsignarPosicion());
+                            viajero.setPosInicio(solicitarPosicion());
                         else
-                            posicionIncio = menuAsignarPosicion();
+                            posicionIncio = solicitarPosicion();
                 
                         break;                    
                     
                 case 4: if(viajero != null)
-                            viajero.setPosMeta(menuAsignarPosicion());
+                            viajero.setPosMeta(solicitarPosicion());
                         else
-                            posicionMeta = menuAsignarPosicion();
+                            posicionMeta = solicitarPosicion();
                 
                         break;
             }
@@ -628,7 +630,7 @@ public class Main
     }    
     
     
-    private static int[] menuAsignarPosicion()
+    private static int[] solicitarPosicion()
     {                
         int numFila = -1, numColumna = -1;
         
@@ -716,7 +718,7 @@ public class Main
         while(opcion < 0 || opcion > 5)
         {                        
             mostrarMapaYdatos();
-            
+            //TODO NO TODAS LAS ESTRATEGIAS DE BUSQUEDA PUEDEN SER SELECCIONADAS. HAY QUE FILTRARLAS EN FUNCION DE SI SON GIROS DE 90 o DE 45
             System.out.print("\nSeleccione una opcion:\n"
                             + "   1 - Busqueda ciega en anchura.\n"
                             + "   2 - Busqueda informada A* - Manhatan (modificada).\n"
@@ -752,13 +754,13 @@ public class Main
             
             switch(opcion)
             {
-                case 1: estrategiaBusqueda = new BusquedaCiegaEnAnchura(viajero);
+                case 1: estrategiaBusqueda = new BusquedaCiegaEnAnchura(mapa);
                         break;
                     
-                case 2: estrategiaBusqueda = new BusquedaInformadaManhatan(viajero);
+                case 2: estrategiaBusqueda = new BusquedaInformadaManhatan(mapa);
                         break;
                     
-                case 3: estrategiaBusqueda = new BusquedaInformadaMaximoDesplazamiento(viajero);
+                case 3: estrategiaBusqueda = new BusquedaInformadaMaximoDesplazamiento(mapa);
                         break;
                     
                 case 4: //TODO Anadir la ultima estrategia informada

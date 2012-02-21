@@ -7,6 +7,9 @@
 
 package practicaIA;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Clase que implementa el estado y el comportamiento del viajero (de Abdel).
  * @author Adrian Carpente Recouso
@@ -16,7 +19,7 @@ public class Viajero
 {
     private static final int inicioPorDefecto[] = {0,4};
     private static final int metaPorDefecto[] = {5,5};
-    private static final Orientacion orientacionPorDefecto = Orientacion.SUR;
+    //private static final Orientacion orientacionPorDefecto = Orientacion.SUR; TODO Borrar esto
     
     private int posInicio[];
     private int posMeta[];
@@ -25,7 +28,13 @@ public class Viajero
     private int gradosGiros;
     private Mapa mapa;
     
-    public Viajero(Mapa mapa, int gradosGiros, boolean aleatorio)
+    /**
+     * 
+     * Crea un viajero en unas posiciones aleatorias dentro del mapa y con una orientacion aleatoria.
+     * @param mapa Mapa sobre el que se va a situar el viajero.
+     * @param gradosGiros Tipo de giros que realizara el viajero. (de 90 o de 45 grados)     
+     */
+    public Viajero(Mapa mapa, int gradosGiros)
     {
         if(gradosGiros != 90 && gradosGiros != 45)
             throw new IllegalArgumentException("Los giros tienen que ser de 90 o de 45 grados");
@@ -33,47 +42,67 @@ public class Viajero
         this.gradosGiros = gradosGiros;
         this.mapa = mapa;
                 
-        //Comprobamos si se trata de una inicializacion aleatoria o por defecto.
-        if(aleatorio)
+        //Generamos una posicion de inicio aleatoria.
+        posInicio = new int[] {Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroFilas()-1),
+                                Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroColumnas()-1)};
+
+        posicion = posInicio;
+
+        //Generamos una posicion de meta aleatoria.
+        do
         {
-            //Generamos una posicion de inicio aleatoria.
-            posInicio = new int[] {Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroFilas()-1),
-                                   Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroColumnas()-1)};
-            
-            posicion = posInicio;
-            
-            //Generamos una posicion de meta aleatoria.
-            do
-            {
-                posMeta = new int[] {Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroFilas()-1),
-                                     Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroColumnas()-1)};
-            }
-            //Si la posicion de inicio y de meta coinciden entonces generamos otra posicion de meta.
-            while(posInicio[0] == posMeta[0] && posInicio[1] == posMeta[1]);
-                                                
-            //Asignamos una orientacion aleatoria para el viajero.
-            if(gradosGiros == 90)
-                //Con giros de 90 grados la orientacion puede ser Norte(0), Sur(1), Este(2), Oeste(3).
-                orientacion = Orientacion.getOrientacionById(Funciones.obtenerNumeroAleatorio(0, 3));
-            else if(gradosGiros == 45)        
-                //Con giros de 45 grados la orientacion puede ser: 
-                //Norte(0), Sur(1), Este(2), Oeste(3), Noreste(4), Noroeste(5), Sureste(6), Suroeste(7).
-                orientacion = Orientacion.getOrientacionById(Funciones.obtenerNumeroAleatorio(0, Orientacion.values().length -1));                        
+            posMeta = new int[] {Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroFilas()-1),
+                                    Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroColumnas()-1)};
         }
-        else
-            cargarPosicionesPorDefecto();
+        //Si la posicion de inicio y de meta coinciden entonces generamos otra posicion de meta.
+        while(posInicio[0] == posMeta[0] && posInicio[1] == posMeta[1]);
+
+        //Asignamos una orientacion aleatoria para el viajero.
+        if(gradosGiros == 90)
+            //Con giros de 90 grados la orientacion puede ser Norte(0), Sur(1), Este(2), Oeste(3).
+            orientacion = Orientacion.getOrientacionById(Funciones.obtenerNumeroAleatorio(0, 3));
+        else if(gradosGiros == 45)        
+            //Con giros de 45 grados la orientacion puede ser: 
+            //Norte(0), Sur(1), Este(2), Oeste(3), Noreste(4), Noroeste(5), Sureste(6), Suroeste(7).
+            orientacion = Orientacion.getOrientacionById(Funciones.obtenerNumeroAleatorio(0, Orientacion.values().length -1));
         
         //Asignamos este viajero al mapa.
         mapa.asignarViajero(this);
     }
     
     
+    /**
+     * Crea un viajero con las posiciones por defecto.
+     * @param mapa Mapa sobre el que se va a situar el viajero.
+     * @param gradosGiros Tipo de giros que realizara el viajero. (de 90 o de 45 grados)
+     * @param orientacion Orientacion del viajero en el mapa.
+     */
+    public Viajero(Mapa mapa, int gradosGiros, Orientacion orientacion)
+    {
+        if(gradosGiros != 90 && gradosGiros != 45)
+            throw new IllegalArgumentException("Los giros tienen que ser de 90 o de 45 grados");
+        
+        this.gradosGiros = gradosGiros;
+        this.mapa = mapa;
+        this.orientacion = orientacion; 
+        
+        this.posicion = inicioPorDefecto; //Es necesario para poder asignar el viajero al mapa.
+        
+        //Asignamos este viajero al mapa.
+        mapa.asignarViajero(this);
+        
+        this.posInicio = new int[2];
+        this.posMeta = new int[2];
+        cargarPosicionesPorDefecto();        
+    }
+    
+    
     public Viajero(Mapa mapa, int gradosGiros, int posInicio[], int posMeta[], Orientacion orientacion)
     {
         setGradosGiros(gradosGiros);               
-        this.posInicio = posInicio;
-        this.posicion = posInicio;
-        this.posMeta = posMeta;
+        setPosInicio(posInicio);
+        setPosMeta(posMeta);
+        setPosicion(posInicio);
         this.orientacion = orientacion;
         this.mapa = mapa;
 
@@ -84,10 +113,10 @@ public class Viajero
     
     public final void cargarPosicionesPorDefecto()
     {
-        posInicio = inicioPorDefecto;
-        posicion = posInicio;
-        posMeta = metaPorDefecto;
-        orientacion = orientacionPorDefecto;
+        setPosInicio(inicioPorDefecto);
+        setPosMeta(metaPorDefecto);
+        setPosicion(inicioPorDefecto);        
+        //orientacion = orientacionPorDefecto; TODO borrar esto
     }
     
     
@@ -102,12 +131,12 @@ public class Viajero
         return posMeta;
     }
     
-    public void setPosInicio(int[] posicion)
+    public final void setPosInicio(int[] posicion)
     {        
         setPosicion(this.posInicio, posicion);
     }    
     
-    public void setPosMeta(int[] posicion)
+    public final void setPosMeta(int[] posicion)
     {
         setPosicion(this.posMeta, posicion);
     }
@@ -118,9 +147,8 @@ public class Viajero
         return posicion;
     }
     
-    public void setPosicion(int[] posicion)
-    {
-        
+    public final void setPosicion(int[] posicion)
+    {        
         setPosicion(this.posicion, posicion);
     }
     
@@ -170,32 +198,34 @@ public class Viajero
     }
     
     
+    public void setPosicionYorientacion(Nodo nodo)
+    {
+        setPosicion(nodo.getPosicion());
+        this.orientacion = nodo.getOrientacion();
+    }
+    
     /**
-     * Metodo que gira la orientacion del viajero en sentido horaro los grados
-     * indicados por el atributo gradoGiros.
-     * @return La nueva orientacion del viajero.
+     * Metodo que devuelve la orientacion del viajero si girase en sentido horario
+     * los grados indicados por el atributo gradoGiros.
+     * @return La orientacion despues del giro.
      */
-    public Orientacion girarSentidoHorario()
+    private Orientacion operadorGirarSentidoHorario()
     {
         if(gradosGiros == 90) //Si los giros son de 90 grados.
         {
             switch(orientacion)
             {
                 case NORTE: 
-                    orientacion = Orientacion.ESTE;
-                    return orientacion;
+                    return Orientacion.ESTE;
                 
                 case ESTE: 
-                    orientacion = Orientacion.SUR;
-                    return orientacion;
-                    
-                case SUR: 
-                    orientacion = Orientacion.OESTE;
-                    return orientacion;
+                    return Orientacion.SUR;
 
+                case SUR: 
+                    return Orientacion.OESTE;
+        
                 case OESTE: 
-                    orientacion = Orientacion.NORTE;
-                    return orientacion;                
+                    return Orientacion.NORTE;                
             } 
         }
         else //Si se trata de giros de 45 grados.
@@ -203,41 +233,103 @@ public class Viajero
             switch(orientacion)
             {
                 case NORTE: 
-                    orientacion = Orientacion.NORESTE;
-                    return orientacion;
-                    
+                    return Orientacion.NORESTE;
+
                 case NORESTE: 
-                    orientacion = Orientacion.ESTE;
-                    return orientacion;
-                    
+                    return Orientacion.ESTE;
+ 
                 case ESTE: 
-                    orientacion = Orientacion.SURESTE;
-                    return orientacion;
-                    
+                    return Orientacion.SURESTE;
+                  
                 case SURESTE: 
-                    orientacion = Orientacion.SUR;
-                    return orientacion;
-                    
+                    return Orientacion.SUR;
+                   
                 case SUR: 
-                    orientacion = Orientacion.SUROESTE;
-                    return orientacion;
+                    return Orientacion.SUROESTE;
                     
                 case SUROESTE: 
-                    orientacion = Orientacion.OESTE;
-                    return orientacion;
-
+                    return Orientacion.OESTE;
+                   
                 case OESTE: 
-                    orientacion = Orientacion.NOROESTE;
-                    return orientacion;
-                
+                    return Orientacion.NOROESTE;
+                   
                 case NOROESTE: 
-                    orientacion = Orientacion.NORTE;
-                    return orientacion;
+                    return Orientacion.NORTE; 
             }
         }
         
         return orientacion;
+    }    
+    
+    
+    /**
+     * Metodo que gira la orientacion del viajero en sentido horaro los grados
+     * indicados por el atributo gradoGiros.
+     * @return La nueva orientacion del viajero.
+     */
+    public Orientacion girarSentidoHorario()
+    {
+        orientacion = operadorGirarSentidoHorario();
+        return orientacion;
     }
+
+    
+    /**
+     * Metodo que devuelve la orientacion del viajero si girase en sentido antihorario
+     * los grados indicados por el atributo gradoGiros.
+     * @return La orientacion despues del giro.
+     */
+    private Orientacion operadorGirarSentidoAntiHorario()
+    {
+        if(gradosGiros == 90) //Si los giros son de 90 grados.
+        {
+            switch(orientacion)
+            {
+                case NORTE: 
+                    return Orientacion.OESTE;
+                
+                case OESTE: 
+                    return Orientacion.SUR;
+                    
+                case SUR: 
+                    return Orientacion.ESTE;
+
+                case ESTE: 
+                    return Orientacion.NORTE;
+            } 
+        }
+        else //Si se trata de giros de 45 grados.
+        {
+            switch(orientacion)
+            {
+                case NORTE: 
+                    return Orientacion.NOROESTE;
+                    
+                case NOROESTE: 
+                    return Orientacion.OESTE;
+                    
+                case OESTE: 
+                    return Orientacion.SUROESTE;
+                    
+                case SUROESTE: 
+                    return Orientacion.SUR;
+                    
+                case SUR: 
+                    return Orientacion.SURESTE;
+                    
+                case SURESTE: 
+                    return Orientacion.ESTE;
+
+                case ESTE: 
+                    return Orientacion.NORESTE;
+                
+                case NORESTE: 
+                    return Orientacion.NORTE;
+            }
+        }
+        
+        return orientacion;
+    }    
     
     
     /**
@@ -247,74 +339,17 @@ public class Viajero
      */
     public Orientacion girarSentidoAntiHorario()
     {
-        if(gradosGiros == 90) //Si los giros son de 90 grados.
-        {
-            switch(orientacion)
-            {
-                case NORTE: 
-                    orientacion = Orientacion.OESTE;
-                    return orientacion;
-                
-                case OESTE: 
-                    orientacion = Orientacion.SUR;
-                    return orientacion;
-                    
-                case SUR: 
-                    orientacion = Orientacion.ESTE;
-                    return orientacion;
-
-                case ESTE: 
-                    orientacion = Orientacion.NORTE;
-                    return orientacion;                
-            } 
-        }
-        else //Si se trata de giros de 45 grados.
-        {
-            switch(orientacion)
-            {
-                case NORTE: 
-                    orientacion = Orientacion.NOROESTE;
-                    return orientacion;
-                    
-                case NOROESTE: 
-                    orientacion = Orientacion.OESTE;
-                    return orientacion;
-                    
-                case OESTE: 
-                    orientacion = Orientacion.SUROESTE;
-                    return orientacion;
-                    
-                case SUROESTE: 
-                    orientacion = Orientacion.SUR;
-                    return orientacion;
-                    
-                case SUR: 
-                    orientacion = Orientacion.SURESTE;
-                    return orientacion;
-                    
-                case SURESTE: 
-                    orientacion = Orientacion.ESTE;
-                    return orientacion;
-
-                case ESTE: 
-                    orientacion = Orientacion.NORESTE;
-                    return orientacion;
-                
-                case NORESTE: 
-                    orientacion = Orientacion.NORTE;
-                    return orientacion;
-            }
-        }
-        
+        orientacion = operadorGirarSentidoAntiHorario();
         return orientacion;
     }    
     
+
     /**
-     * Metodo que avanza una casilla la posicion actual del viajero en la orientacion
-     * indicada por el atributo orientacion.
+     * Metodo que devuelve la posicion a la que llegaria el viajero si
+     * avanzase en la orientacion indicada por el atributo orientacion.
      * @return La nueva posicion del viajero.
      */
-    public int[] avanzar()
+    private int[] operadorAvanzar()
     {
         switch(orientacion)
         {
@@ -322,8 +357,7 @@ public class Viajero
                 if(posicion[0] == 0)
                     throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el norte ya que "
                                                         + "el viajero esta en el extremo norte del mapa");
-                posicion[0] = posicion[0] - 1;
-                return posicion;
+                return new int[] {posicion[0] - 1, posicion[1]};
                 
             case NORESTE: 
                 if(posicion[0] == 0)
@@ -333,16 +367,13 @@ public class Viajero
                 if(posicion[1] == (mapa.getNumeroColumnas()-1))
                     throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el este ya que "
                                                         + "el viajero esta en el extremo este del mapa");
-                posicion[0] = posicion[0] - 1;
-                posicion[1] = posicion[1] + 1;
-                return posicion;
+                return new int[] {posicion[0] - 1, posicion[1] + 1};
 
             case ESTE:                                 
                 if(posicion[1] == (mapa.getNumeroColumnas()-1))
                     throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el este ya que "
                                                         + "el viajero esta en el extremo este del mapa");                
-                posicion[1] = posicion[1] + 1;
-                return posicion;
+                return new int[] {posicion[0], posicion[1] + 1};
 
             case SURESTE: 
                 if(posicion[0] == (mapa.getNumeroFilas()-1))
@@ -352,16 +383,13 @@ public class Viajero
                 if(posicion[1] == (mapa.getNumeroColumnas()-1))
                     throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el este ya que "
                                                         + "el viajero esta en el extremo este del mapa");
-                posicion[0] = posicion[0] + 1;
-                posicion[1] = posicion[1] + 1;
-                return posicion;
+                return new int[] {posicion[0] + 1, posicion[1] + 1};
 
             case SUR: 
                 if(posicion[0] == (mapa.getNumeroFilas()-1))
                     throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el sur ya que "
-                                                        + "el viajero esta en el extremo sur del mapa");
-                posicion[0] = posicion[0] + 1;                
-                return posicion;
+                                                        + "el viajero esta en el extremo sur del mapa");          
+                return new int[] {posicion[0] + 1, posicion[1]};
 
             case SUROESTE: 
                 if(posicion[0] == (mapa.getNumeroFilas()-1))
@@ -371,16 +399,13 @@ public class Viajero
                 if(posicion[1] == 0)
                     throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el oeste ya que "
                                                         + "el viajero esta en el extremo oeste del mapa");
-                posicion[0] = posicion[0] + 1;
-                posicion[1] = posicion[1] - 1;
-                return posicion;
+                return new int[] {posicion[0] + 1, posicion[1] - 1};
 
             case OESTE:                 
                 if(posicion[1] == 0)
                     throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el oeste ya que "
                                                         + "el viajero esta en el extremo oeste del mapa");
-                posicion[1] = posicion[1] - 1;
-                return posicion;
+                return new int[] {posicion[0], posicion[1] - 1};
 
             case NOROESTE: 
                 if(posicion[0] == 0)
@@ -390,11 +415,48 @@ public class Viajero
                 if(posicion[1] == 0)
                     throw new IndexOutOfBoundsException("No se puede avanzar mas hacia el oeste ya que "
                                                         + "el viajero esta en el extremo oeste del mapa");
-                posicion[0] = posicion[0] - 1;
-                posicion[1] = posicion[1] - 1;
-                return posicion;
+                return new int[] {posicion[0] - 1, posicion[1] - 1};
         }   
         
         return posicion;
+    }    
+    
+    
+    /**
+     * Metodo que avanza una casilla la posicion actual del viajero en la orientacion
+     * indicada por el atributo orientacion.
+     * @return La nueva posicion del viajero.
+     */
+    public int[] avanzar()
+    {
+        posicion = operadorAvanzar();
+        
+        return posicion;
+    }
+    
+    /**
+     * Metodo que genera una lista con los nodos sucesores del nodo actual.
+     * Este metodo solo inicializa la posicion y la orientacion de los nodos sucesores. 
+     * La estrategia de busqueda que llame a este metodo se tiene que encargar de 
+     * asignarle el nodo padre, el coste y el valor de la heuristica a cada uno de los
+     * nodos sucesores.
+     * @return La lista de nodos sucesores.
+     */
+    public Set<Nodo> getNodosSucesores()
+    {
+        Set<Nodo> sucesores = new HashSet<Nodo>();
+        
+        try
+        {
+            sucesores.add(new Nodo(operadorAvanzar(), orientacion));
+        }
+        catch(Exception e){ /*Si se intenta avanzar fuera del mapa ignoramos el nuevo nodo*/}
+        
+        
+        sucesores.add(new Nodo(posicion, operadorGirarSentidoHorario()));
+        
+        sucesores.add(new Nodo(posicion, operadorGirarSentidoAntiHorario()));
+        
+        return sucesores;
     }
 }
