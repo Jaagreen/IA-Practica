@@ -51,6 +51,7 @@ public abstract class EstrategiaBusqueda
         return viajero;
     }
     
+    
     /**
      * Metodo que determina si un nodo es solucion del problema, es decir, si el nodo
      * es la posicon de destino a la que quiere llegar el viajero.
@@ -68,11 +69,13 @@ public abstract class EstrategiaBusqueda
     
     public abstract void buscarIteraionAiteracion();
     
+    
     public void resetear(Mapa mapa)
     {
         this.mapa = mapa;
         this.viajero = mapa.getViajero();
     }
+    
     
     public void mostarInformacion()
     {

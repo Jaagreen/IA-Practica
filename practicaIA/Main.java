@@ -479,7 +479,9 @@ public class Main
                         break;
                     
                 case 8: orientacion = Orientacion.NOROESTE;
-                        break;    
+                        break;  
+                    
+                case 0: return;
             }
             
             if(viajero != null) 
@@ -689,7 +691,7 @@ public class Main
                             + "   1 - Busqueda ciega en anchura.\n"
                             + "   2 - Busqueda informada A* - Manhatan (modificada).\n"
                             + "   3 - Busqueda informada A* - Maximo desplazamiento en filas o columas.\n"
-                            + "   4 - Busqueda informada A* - ... .\n"                            
+                            + "   4 - Busqueda informada A* - Maximo desplazamiento en filas o columas (mejorado).\n"                            
                             + "   0 - Atras.\n\n"
 
                             + "Opcion: ");
@@ -729,7 +731,7 @@ public class Main
                 case 3: estrategiaBusqueda = new BusquedaInformadaMaximoDesplazamiento(mapa);
                         break;
                     
-                case 4: //TODO Anadir la ultima estrategia informada
+                case 4: estrategiaBusqueda = new BusquedaInformadaMaximoDesplazamientoHeuristicaMejorada(mapa);
                         break;
             }
         }                
