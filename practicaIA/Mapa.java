@@ -269,7 +269,7 @@ public class Mapa
                 else if(posicionesAccedidas[fila][col] == true) //si la posicion actual ha sido accedida por el viajero.
                 {
                     //Marcamos las posiciones por las que ha pasado el viajero.
-                    System.out.print("\033[1;31m x \033[0m");
+                    System.out.print("\033[1;42m " + mapa[fila][col] + " \033[0m");
                 }
                 else
                     System.out.print(" " + mapa[fila][col] + " ");
