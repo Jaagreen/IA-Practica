@@ -64,8 +64,6 @@ public abstract class EstrategiaBusqueda
                nodo.getPosicion()[1] == viajero.getPosMeta()[1];
     }
     
-    public abstract void mostrarEstadoActual();
-    
     public abstract void buscar();
     
     public abstract void buscarIteraionAiteracion();

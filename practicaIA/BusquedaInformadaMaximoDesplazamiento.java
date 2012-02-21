@@ -20,12 +20,6 @@ public class BusquedaInformadaMaximoDesplazamiento extends EstrategiaBusqueda
         super("Busqueda informada A*", "Maximo desplazamiento en filas o columnas", mapa);
     }
 
-    @Override
-    public void mostrarEstadoActual()
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
 
     @Override
     public void buscar()

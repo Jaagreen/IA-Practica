@@ -19,13 +19,6 @@ public class BusquedaCiegaEnAnchura extends EstrategiaBusqueda
         super("Busqueda ciega en anchura", "", mapa);
     }
 
-    
-    @Override
-    public void mostrarEstadoActual()
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
 
     @Override
     public void buscar()
