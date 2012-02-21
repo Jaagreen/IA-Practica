@@ -32,5 +32,12 @@ public class BusquedaInformadaMaximoDesplazamiento extends EstrategiaBusqueda
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+
+    @Override
+    public void buscarIteraionAiteracion()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
     
 }

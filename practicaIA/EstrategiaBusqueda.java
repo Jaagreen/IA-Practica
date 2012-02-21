@@ -68,4 +68,6 @@ public abstract class EstrategiaBusqueda
     
     public abstract void buscar();
     
+    public abstract void buscarIteraionAiteracion();
+    
 }

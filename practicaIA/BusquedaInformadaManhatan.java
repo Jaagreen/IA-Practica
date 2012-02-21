@@ -8,6 +8,7 @@
 package practicaIA;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 /**
@@ -240,7 +241,7 @@ public class BusquedaInformadaManhatan extends EstrategiaBusqueda
             
             nodosAbiertos.remove(mejorNodo);
             
-            System.out.println("\nMejor nodo = " + mejorNodo + " hashcode=" + mejorNodo.hashCode());
+            System.out.println("\nMejor nodo = " + mejorNodo);
             
             //Quitamos el mejorNodo de la lista de nodos abiertos y lo metemos en la lista de nodos cerrados.
             nodosCerrados.add(mejorNodo);
@@ -249,14 +250,16 @@ public class BusquedaInformadaManhatan extends EstrategiaBusqueda
             //Comprobamos si el mejor nodo selecionado es meta.
             if(esNodoMeta(mejorNodo))
             {
-                //TODO HAY QUE TERMINAR LA LISTA DE TAREAS A RALIZAR CUANDO SE ENCUENTRE EL NODO META.
                 System.out.println("¡¡¡SOLUCION ENCONTRADA!!!");
-                return;
+                mostrarCaminoSeguido(mejorNodo);                                
+                break;
             }
-            
+
             //Situamos al viajero en la posicion del mejor nodo.
-            //getViajero().setPosicion(mejorNodo.getPosicion());
             getViajero().setPosicionYorientacion(mejorNodo);
+
+            
+            getMapa().setPosicionAccedida(mejorNodo.getPosicion()[0], mejorNodo.getPosicion()[1]);
             
             for(Nodo sucesor: getViajero().getNodosSucesores())
             {
@@ -304,8 +307,7 @@ public class BusquedaInformadaManhatan extends EstrategiaBusqueda
                     }
                 }
                 else //Si el nodo no existe en el conjunto de abiertos ni de cerrados.
-                {
-                    System.out.println("Sucesor = " + sucesor + " hashcode=" + sucesor.hashCode());
+                {                    
                     //Le asignamos el valor de heuristica que le corresponde.
                     sucesor.setValorHeuristica(funcionHeuristica(sucesor));
                     
@@ -314,11 +316,33 @@ public class BusquedaInformadaManhatan extends EstrategiaBusqueda
                     
                     //Anadimos el nodo como sucesor del nodo mejorNodo.
                     mejorNodo.addSucesor(sucesor);
-                }
-                
-                System.out.println("Sucesor = " + sucesor + " hashcode=" + sucesor.hashCode());
+                }                                
             }
         }
+        
+        if(nodosAbiertos.isEmpty())
+            System.out.println("No se ha podido encontrar la solucion al problema.");
+        
+        Funciones.pausa();
+    }
+    
+    private void mostrarCaminoSeguido(Nodo mejorNodo)
+    {       
+        //Reconstruimos el camino optimo.
+        LinkedList<Nodo> camino = new LinkedList<Nodo>();                
+
+        //Anadimos cada padre del mejor nodo al camino optimo.
+        while(mejorNodo != null)
+        {
+            camino.addFirst(mejorNodo);
+            mejorNodo = mejorNodo.getPadre();
+        }
+
+        //Mostramos el camino optimo.        
+        for(int i = 0; i < (camino.size()-1); i++)
+            System.out.print(camino.get(i) + " -> ");
+
+        System.out.println(camino.getLast());
     }
     
     /**
@@ -365,6 +389,13 @@ public class BusquedaInformadaManhatan extends EstrategiaBusqueda
     
     @Override
     public void mostrarEstadoActual()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+
+    @Override
+    public void buscarIteraionAiteracion()
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }

@@ -21,9 +21,9 @@ public class Viajero
     private static final int metaPorDefecto[] = {5,5};
     //private static final Orientacion orientacionPorDefecto = Orientacion.SUR; TODO Borrar esto
     
-    private int posInicio[];
-    private int posMeta[];
-    private int posicion[];
+    private int posInicio[] = new int[2];
+    private int posMeta[] = new int[2];
+    private int posicion[] = new int[2];
     private Orientacion orientacion;
     private int gradosGiros;
     private Mapa mapa;
@@ -43,10 +43,11 @@ public class Viajero
         this.mapa = mapa;
                 
         //Generamos una posicion de inicio aleatoria.
-        posInicio = new int[] {Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroFilas()-1),
-                                Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroColumnas()-1)};
+        posInicio[0] = Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroFilas()-1);
+        posInicio[0] = Funciones.obtenerNumeroAleatorio(0, mapa.getNumeroColumnas()-1);
 
-        posicion = posInicio;
+        posicion[0] = posInicio[1];
+        posicion[1] = posInicio[1];
 
         //Generamos una posicion de meta aleatoria.
         do
@@ -86,13 +87,12 @@ public class Viajero
         this.mapa = mapa;
         this.orientacion = orientacion; 
         
-        this.posicion = inicioPorDefecto; //Es necesario para poder asignar el viajero al mapa.
+        this.posicion[0] = inicioPorDefecto[0]; //Es necesario para poder asignar el viajero al mapa.
+        this.posicion[1] = inicioPorDefecto[1]; 
         
         //Asignamos este viajero al mapa.
         mapa.asignarViajero(this);
         
-        this.posInicio = new int[2];
-        this.posMeta = new int[2];
         cargarPosicionesPorDefecto();        
     }
     

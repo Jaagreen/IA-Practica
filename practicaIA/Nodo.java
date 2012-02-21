@@ -18,7 +18,7 @@ import java.util.Set;
  */
 public class Nodo
 {
-    private int posicion[];
+    private int posicion[] = new int[2];
     private Orientacion orientacion;
     private Nodo padre;
     private Set<Nodo> sucesores;
@@ -28,7 +28,8 @@ public class Nodo
     
     public Nodo(int posicion[], Orientacion orientacion)
     {
-        this.posicion = posicion;
+        this.posicion[0] = posicion[0];
+        this.posicion[1] = posicion[1];
         this.orientacion = orientacion;        
         sucesores = new HashSet<Nodo>();
         nodoExplorado = false;
@@ -37,7 +38,8 @@ public class Nodo
     
     public Nodo(int posicion[], Orientacion orientacion, Nodo padre, int coste, int valorHeuristica)
     {
-        this.posicion = posicion;
+        this.posicion[0] = posicion[0];
+        this.posicion[1] = posicion[1];
         this.orientacion = orientacion;
         this.padre = padre;
         this.coste = coste;
