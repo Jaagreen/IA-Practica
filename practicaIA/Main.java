@@ -203,7 +203,7 @@ public class Main
         }
         
         //Al cargar un nuevo mapa reseteamos todo.
-        if(opcion > 0 && opcion < 3)
+        if(opcion > 0 && opcion < 4)
         {
             viajero = null;
             gradosGiros = 0;
