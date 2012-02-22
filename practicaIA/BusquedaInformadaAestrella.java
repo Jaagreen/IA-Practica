@@ -121,8 +121,12 @@ public abstract class BusquedaInformadaAestrella extends EstrategiaBusqueda
             //Le asignamos el valor de heuristica que le corresponde.
             nodoInicial.setValorHeuristica(funcionHeuristica(nodoInicial));
 
+            nodoInicial.setProfundidad(0);
+
             //Anadimos el nodo inicial en la lista de nodos abiertos.
-            nodosAbiertos.add(nodoInicial);        
+            nodosAbiertos.add(nodoInicial);
+
+            aumentarCotadorNodosGenerado();
         }
     }
     
@@ -162,6 +166,10 @@ public abstract class BusquedaInformadaAestrella extends EstrategiaBusqueda
 
         for(Nodo sucesor: getViajero().getNodosSucesores())
         {
+            aumentarCotadorNodosGenerado();
+
+            sucesor.setProfundidad(mejorNodo.getProfundidad() + 1);
+
             //Asignamos como padre de cada nodo suceso al nodo mejorNodo.
             sucesor.setPadre(mejorNodo);
 
@@ -292,7 +300,16 @@ public abstract class BusquedaInformadaAestrella extends EstrategiaBusqueda
             }
         }
     }
-    
+
+
+    private void resultadosBusqueda()
+    {
+        System.out.println("COSTE DE LA BUSQUEDA: " + nodosCerrados.size());
+        System.out.println("PROFUNDIDAD DEL ARBOL: " + mejorNodo.getCoste());
+        System.out.println("NUMERO DE NODOS GENERADOS: " + getNumeroNodosGenerados());
+        System.out.println("FACTOR DE RAMIFIACION EFECTIVA: " +
+                           BranchingFactor.compute(getNumeroNodosGenerados(), mejorNodo.getProfundidad()));
+    }
     
     @Override
     public void buscar()
@@ -322,7 +339,9 @@ public abstract class BusquedaInformadaAestrella extends EstrategiaBusqueda
             
         if(solucionEncontrada)
         {
-            System.out.println("¡¡¡SOLUCION ENCONTRADA!!!");
+            System.out.println("¡¡¡SOLUCION ENCONTRADA!!!\n");
+
+            resultadosBusqueda();
         }
         else if(nodosAbiertos.isEmpty())
         {
@@ -350,11 +369,12 @@ public abstract class BusquedaInformadaAestrella extends EstrategiaBusqueda
                            "CAMINO SEGUIDO:\n\n\n" +
                            "SUCESORES DEL MEJOR NODO:\n\n");
 
-        Funciones.pausa();
         
         //Mientras que haya nodos en la lista de nodos abiertos.
         while(!nodosAbiertos.isEmpty() && !solucionEncontrada)
-        {            
+        {
+            Funciones.pausa();
+
             solucionEncontrada = realizarIteracionDeBusqueda();
             
             Funciones.limpiarPantalla();            
@@ -367,16 +387,16 @@ public abstract class BusquedaInformadaAestrella extends EstrategiaBusqueda
             
             mostrarCaminoSeguido(mejorNodo);
             
-            mostrarSucesoresDelMejorNodo();
-            
-            Funciones.pausa();
+            mostrarSucesoresDelMejorNodo();            
         }
         
         marcarPosicionesCaminoEncontrado();
         
         if(solucionEncontrada)
         {
-            System.out.println("\n¡¡¡SOLUCION ENCONTRADA!!!");
+            System.out.println("\n¡¡¡SOLUCION ENCONTRADA!!!\n");
+
+            resultadosBusqueda();
         }
         else if(nodosAbiertos.isEmpty())
         {

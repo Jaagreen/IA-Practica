@@ -71,13 +71,14 @@ public class Main
             mostrarMapaYdatos();
             
             System.out.print("\nSeleccione una opcion:\n"
-                            + "   1 - Cargar mapa.\n"
-                            + "   2 - Tipos de giros.\n"
-                            + "   3 - Orientacion.\n"        
-                            + "   4 - Posiciones.\n"
-                            + "   5 - Metodo de busqueda.\n"
-                            + "   6 - Iniciar busqueda.\n"
-                            + "   7 - Iniciar busqueda iteracion a iteracion.\n"
+                            + "   1 - Asistente de configuracion.\n"
+                            + "   2 - Cargar mapa.\n"
+                            + "   3 - Tipos de giros.\n"
+                            + "   4 - Orientacion.\n"
+                            + "   5 - Posiciones.\n"
+                            + "   6 - Metodo de busqueda.\n"
+                            + "   7 - Iniciar busqueda.\n"
+                            + "   8 - Iniciar busqueda iteracion a iteracion.\n"
                             + "   0 - Salir.\n\n"
 
                             + "Opcion: ");
@@ -109,29 +110,25 @@ public class Main
             switch(opcion)
             {
                 case 1: menuCargarMapa();
+                        menuAsignarTipoGiros();
+                        menuAsignarOrientacion();
+                        menuAsignarPosicionesViaje();
+                        menuAsignarEstrategiaBusqueda();
+                        break;
+
+                case 2: menuCargarMapa();
                         break;
                     
-                case 2: menuAsignarTipoGiros();
+                case 3: menuAsignarTipoGiros();
                         break;
                     
-                case 3: menuAsignarOrientacion();
+                case 4: menuAsignarOrientacion();
                         break;
                     
-                case 4: menuAsignarPosicionesViaje();
+                case 5: menuAsignarPosicionesViaje();
                         break;
                     
-                case 5: menuAsignarEstrategiaBusqueda();
-                        break;
-                    
-                case 6: if(estrategiaBusqueda == null)
-                        {
-                            System.out.println("\nTiene que indicar una estrategia de busqueda antes de comenzar la busqueda.");
-                            pausa();
-                            return;
-                        }
-                    
-                        estrategiaBusqueda.resetear(mapa);
-                        estrategiaBusqueda.buscar();  //TODO IMPLEMENTAR UN MENU Y CONTROLES DE EJECUCION
+                case 6: menuAsignarEstrategiaBusqueda();
                         break;
                     
                 case 7: if(estrategiaBusqueda == null)
@@ -142,7 +139,18 @@ public class Main
                         }
                     
                         estrategiaBusqueda.resetear(mapa);
-                        estrategiaBusqueda.buscarIteraionAiteracion();  //TODO IMPLEMENTAR UN MENU Y CONTROLES DE EJECUCION
+                        estrategiaBusqueda.buscar();  
+                        break;
+                    
+                case 8: if(estrategiaBusqueda == null)
+                        {
+                            System.out.println("\nTiene que indicar una estrategia de busqueda antes de comenzar la busqueda.");
+                            pausa();
+                            return;
+                        }
+                    
+                        estrategiaBusqueda.resetear(mapa);
+                        estrategiaBusqueda.buscarIteraionAiteracion();  
                         break;
             }
         }                
@@ -686,12 +694,22 @@ public class Main
         while(opcion < 0 || opcion > 5)
         {                        
             mostrarMapaYdatos();
-            //TODO NO TODAS LAS ESTRATEGIAS DE BUSQUEDA PUEDEN SER SELECCIONADAS. HAY QUE FILTRARLAS EN FUNCION DE SI SON GIROS DE 90 o DE 45
-            System.out.print("\nSeleccione una opcion:\n"
+            if(gradosGiros == 90)
+            {
+                System.out.print("\nSeleccione una opcion:\n"
                             + "   1 - Busqueda ciega en anchura.\n"
                             + "   2 - Busqueda informada A* - Manhatan (modificada).\n"
                             + "   3 - Busqueda informada A* - Maximo desplazamiento en filas o columas.\n"
-                            + "   4 - Busqueda informada A* - Maximo desplazamiento en filas o columas (mejorado).\n"                            
+                            + "   4 - Busqueda informada A* - Maximo desplazamiento en filas o columas (mejorado).\n"
+                            + "   0 - Atras.\n\n"
+
+                            + "Opcion: ");
+            }
+            else
+                System.out.print("\nSeleccione una opcion:\n"
+                            + "   1 - Busqueda ciega en anchura.\n"
+                            + "   2 - Busqueda informada A* - Maximo desplazamiento en filas o columas.\n"
+                            + "   3 - Busqueda informada A* - Maximo desplazamiento en filas o columas (mejorado).\n"
                             + "   0 - Atras.\n\n"
 
                             + "Opcion: ");
@@ -713,26 +731,51 @@ public class Main
                 continue;
             }
             
-            if(opcion < 0 || opcion > 5)
+
+            if(gradosGiros == 90)
             {
-                System.out.println("La opcion seleccionada no es correcta");
-                pausa();
-                continue;
+                if(opcion < 0 || opcion > 4)
+                {
+                    System.out.println("La opcion seleccionada no es correcta");
+                    pausa();
+                    continue;
+                }
+
+                switch(opcion)
+                {
+                    case 1: estrategiaBusqueda = new BusquedaCiegaEnAnchura(mapa);
+                            break;
+
+                    case 2: estrategiaBusqueda = new BusquedaInformadaManhatan(mapa);
+                            break;
+
+                    case 3: estrategiaBusqueda = new BusquedaInformadaMaximoDesplazamiento(mapa);
+                            break;
+
+                    case 4: estrategiaBusqueda = new BusquedaInformadaMaximoDesplazamientoHeuristicaMejorada(mapa);
+                            break;
+                }
             }
-            
-            switch(opcion)
+            else
             {
-                case 1: estrategiaBusqueda = new BusquedaCiegaEnAnchura(mapa);
-                        break;
-                    
-                case 2: estrategiaBusqueda = new BusquedaInformadaManhatan(mapa);
-                        break;
-                    
-                case 3: estrategiaBusqueda = new BusquedaInformadaMaximoDesplazamiento(mapa);
-                        break;
-                    
-                case 4: estrategiaBusqueda = new BusquedaInformadaMaximoDesplazamientoHeuristicaMejorada(mapa);
-                        break;
+                if(opcion < 0 || opcion > 3)
+                {
+                    System.out.println("La opcion seleccionada no es correcta");
+                    pausa();
+                    continue;
+                }
+
+                switch(opcion)
+                {
+                    case 1: estrategiaBusqueda = new BusquedaCiegaEnAnchura(mapa);
+                            break;
+
+                    case 2: estrategiaBusqueda = new BusquedaInformadaMaximoDesplazamiento(mapa);
+                            break;
+
+                    case 3: estrategiaBusqueda = new BusquedaInformadaMaximoDesplazamientoHeuristicaMejorada(mapa);
+                            break;
+                }
             }
         }                
     }

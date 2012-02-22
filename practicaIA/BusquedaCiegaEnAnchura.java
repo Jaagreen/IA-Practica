@@ -56,8 +56,15 @@ public class BusquedaCiegaEnAnchura extends EstrategiaBusqueda
             //Como es el primer no no tiene padre.
             nodoInicial.setPadre(null);
 
+            //Como es el primer nodo el coste para llegar hasta el es 0.
+            nodoInicial.setCoste(0);
+
+            nodoInicial.setProfundidad(0);
+
             //Anadimos el nodo inicial en la lista de nodos abiertos.
             nodosAbiertos.add(nodoInicial);
+
+            aumentarCotadorNodosGenerado();
         }
     }
 
@@ -82,7 +89,7 @@ public class BusquedaCiegaEnAnchura extends EstrategiaBusqueda
             //Asignamos como padre de cada nodo suceso al nodo mejorNodo.
             sucesor.setPadre(n);
 
-            //Si no existe en la lista de nodos abiertos, entnces lo anadimos
+            //Si no existe en la lista de nodos abiertos, entonces lo anadimos
             if(!nodosAbiertos.contains(n))
                 nodosAbiertos.addLast(sucesor);
         }
@@ -90,6 +97,27 @@ public class BusquedaCiegaEnAnchura extends EstrategiaBusqueda
         //Realizamos la prueba de meta a los sucesores.
         for(Nodo sucesor: conjuntoSucesores)
         {
+            aumentarCotadorNodosGenerado();
+            
+            sucesor.setProfundidad(n.getProfundidad() + 1);
+
+            //Si el nodo sucesor esta orientado en la misma direccion es por que
+            //lo que se ha hecho es avanzar.
+            if(sucesor.getOrientacion().equals(n.getOrientacion()))
+            {
+                //El coste de cada nodo sucesor es el coste de ir hasta el nodo n
+                //mas el coste de ir desde el nodo n hasta el nodo sucesor actual.
+                sucesor.setCoste(n.getCoste() +
+                                 getMapa().getDificultadPosicion(sucesor.getPosicion()[0],
+                                                                 sucesor.getPosicion()[1]));
+            }
+            else //Si la direccion es distinta lo que se ha hecho es girar por tanto el coste es 1.
+            {
+                //Si se ha realizado un cambio de direccion sumamos uno al coste total.
+                sucesor.setCoste(n.getCoste() + 1);
+            }
+
+
             //Comprobamos si el nodo actual es meta.
             if(esNodoMeta(sucesor))
             {
@@ -105,24 +133,24 @@ public class BusquedaCiegaEnAnchura extends EstrategiaBusqueda
     }
 
 
-    private void mostrarCaminoSeguido(Nodo mejorNodo)
+    private void mostrarCaminoSeguido(Nodo nodo)
     {
         //Reconstruimos el camino optimo.
         LinkedList<Nodo> camino = new LinkedList<Nodo>();
 
         //Anadimos cada padre del mejor nodo al camino optimo.
-        while(mejorNodo != null)
+        while(nodo != null)
         {
-            camino.addFirst(mejorNodo);
-            mejorNodo = mejorNodo.getPadre();
+            camino.addFirst(nodo);
+            nodo = nodo.getPadre();
         }
 
         System.out.println("CAMINO SEGUIDO:");
         //Mostramos el camino optimo.
         for(int i = 0; i < (camino.size()-1); i++)
-            System.out.print(camino.get(i) + " -> ");
+            System.out.print(camino.get(i).estadoYcoste() + " -> ");
 
-        System.out.println(camino.getLast() + "\n");
+        System.out.println(camino.getLast().estadoYcoste() + "\n");
     }
 
 
@@ -132,7 +160,7 @@ public class BusquedaCiegaEnAnchura extends EstrategiaBusqueda
 
         //Mostramos el conjunto de nodos abiertos.
         for(Nodo nodo: nodosAbiertos)
-            System.out.print(nodo + " - ");
+            System.out.print(nodo.estadoYcoste() + " - ");
 
         System.out.println("\n");
     }
@@ -151,6 +179,15 @@ public class BusquedaCiegaEnAnchura extends EstrategiaBusqueda
                 n = n.getPadre();
             }
         }
+    }
+
+    private void resultadosBusqueda()
+    {
+        System.out.println("COSTE DE LA BUSQUEDA: " + nodosCerrados.size());
+        System.out.println("PROFUNDIDAD DEL ARBOL: " + nodoFinal.getCoste());
+        System.out.println("NUMERO DE NODOS GENERADOS: " + getNumeroNodosGenerados());
+        System.out.println("FACTOR DE RAMIFIACION EFECTIVA: " +                               
+                           BranchingFactor.compute(getNumeroNodosGenerados(), nodoFinal.getProfundidad()));
     }
 
 
@@ -185,7 +222,9 @@ public class BusquedaCiegaEnAnchura extends EstrategiaBusqueda
 
         if(solucionEncontrada)
         {
-            System.out.println("¡¡¡SOLUCION ENCONTRADA!!!");
+            System.out.println("¡¡¡SOLUCION ENCONTRADA!!!\n");
+
+            resultadosBusqueda();
         }
         else if(nodosAbiertos.isEmpty())
         {
@@ -208,29 +247,31 @@ public class BusquedaCiegaEnAnchura extends EstrategiaBusqueda
 
         getMapa().mostrar();
         mostarInformacion();
-        mostrarNodosAbiertos();
-
-        Funciones.pausa();
+        mostrarNodosAbiertos();        
 
         //Mientras que haya nodos en la lista de nodos abiertos.
         while(!nodosAbiertos.isEmpty() && !solucionEncontrada)
         {
+            Funciones.pausa();
+            
             solucionEncontrada = realizarIteracionDeBusqueda();
 
             Funciones.limpiarPantalla();
             getMapa().mostrar();
             mostarInformacion();
 
-            mostrarNodosAbiertos();
-
-            Funciones.pausa();
+            mostrarNodosAbiertos();            
         }
 
-        marcarPosicionesCaminoEncontrado();
+        marcarPosicionesCaminoEncontrado();        
+
+        mostrarCaminoSeguido(nodoFinal);
 
         if(solucionEncontrada)
         {
-            System.out.println("\n¡¡¡SOLUCION ENCONTRADA!!!");
+            System.out.println("\n¡¡¡SOLUCION ENCONTRADA!!!\n");
+
+            resultadosBusqueda();
         }
         else if(nodosAbiertos.isEmpty())
         {

@@ -18,6 +18,7 @@ public abstract class EstrategiaBusqueda
     private String nombreHeuristica;
     private Viajero viajero;
     private Mapa mapa;
+    private int numeroNodosGenerados = 0;
     
     public EstrategiaBusqueda(String tipo, String nombreHeuristica, Mapa mapa)
     {
@@ -68,12 +69,27 @@ public abstract class EstrategiaBusqueda
     public abstract void buscar();
     
     public abstract void buscarIteraionAiteracion();
-    
+
+
+    public int getNumeroNodosGenerados()
+    {
+        return numeroNodosGenerados;
+    }
+
+    /**
+     * Metodo que aumenta en una unidad el numero de nodos generados.
+     */
+    void aumentarCotadorNodosGenerado()
+    {
+        numeroNodosGenerados = numeroNodosGenerados +1;
+    }
+
     
     public void resetear(Mapa mapa)
     {
         this.mapa = mapa;
         this.viajero = mapa.getViajero();
+        this.numeroNodosGenerados = 0;
     }
     
     
@@ -101,10 +117,12 @@ public abstract class EstrategiaBusqueda
         System.out.printf("\033[%dGPosicion: (" + viajero.getPosicion()[0] + "," + 
                           viajero.getPosicion()[1] + ")\n", 10+4*mapa.getNumeroColumnas());
 
-        System.out.printf("\033[%dGNodo: ([(fila, col) orientacion], coste, heuristica)", 
+        if(nombreHeuristica.equals(""))
+            System.out.printf("\033[%dGNodo: ([(fila, col) orientacion], coste)", 10+4*mapa.getNumeroColumnas());
+        else
+            System.out.printf("\033[%dGNodo: ([(fila, col) orientacion], coste, heuristica)",
                            10+4*mapa.getNumeroColumnas());
         
         System.out.print("\033[u"); //Restauramos la posicion del cursor.         
-    }
-    
+    } 
 }

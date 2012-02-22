@@ -25,6 +25,7 @@ public class Nodo
     private int coste;
     private int valorHeuristica;
     private boolean nodoExplorado;
+    private int profundidad;
     
     public Nodo(int posicion[], Orientacion orientacion)
     {
@@ -104,7 +105,17 @@ public class Nodo
     {
         sucesores.add(nodo);
     }
-    
+
+
+    public int getProfundidad()
+    {
+        return profundidad;
+    }
+
+    public void setProfundidad(int profundidad)
+    {
+        this.profundidad = profundidad;
+    }
     
     /**
      * Metodo para calcular el valor de la funcion de evaluacion. Dicha fucion devuelve
@@ -138,7 +149,13 @@ public class Nodo
     {
         return "[(" + posicion[0] + "," + posicion[1] + ") " + orientacion.getAbrebiatura() + "]";
     }
-    
+
+
+    public String estadoYcoste()
+    {
+        return "(" + estado() + "," + coste +")";
+    }
+
     
     @Override
     public String toString()
