@@ -100,7 +100,7 @@ public class Main
                 continue;
             }
             
-            if(opcion < 0 || opcion > 7)
+            if(opcion < 0 || opcion > 8)
             {
                 System.out.println("La opcion seleccionada no es correcta");
                 pausa();
